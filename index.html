@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>clicktochangecolor</title>
+    <title>kylerunottuff</title>
     <style>
       body {
         display: flex;
@@ -24,20 +24,26 @@
     </style>
   </head>
   <body>
-    <button id="btn" onclick="openSite()">Click to change color</button>
+    <button id="btn" onclick="openWindow()">Click to change color</button>
 
     <script>
       const colors = ["red", "blue", "green", "purple", "orange", "pink"];
       let i = 0;
 
-      function openSite() {
+      function openWindow() {
         // Change button color
         const btn = document.getElementById("btn");
         i = (i + 1) % colors.length;
         btn.style.backgroundColor = colors[i];
 
-        // Open the actual website in a new tab
-        window.open("https://eaglercraft.dev/clients/Tuff%20Client%20WASM/", "_blank");
+        // Open a "new window" (popup style)
+        const newWin = window.open("", "_blank", "width=800,height=600");
+
+        // Initially blank content
+        newWin.document.write("<p style='font-family:Arial;text-align:center;margin-top:50px;'>Loading...</p>");
+
+        // Immediately redirect to actual site
+        newWin.location.href = "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/";
       }
     </script>
   </body>
