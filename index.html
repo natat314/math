@@ -5,8 +5,8 @@
 </head>
 <body>
 
-<button id="myBtn" style="background-color:#f8f8f8; padding:15px 25px; border:none; cursor:pointer;">
-  Open Window
+<button id="myBtn" style="background-color:#f7f7f7; padding:15px 25px; border:none; cursor:pointer;">
+  Click to Change Color
 </button>
 
 <script>
@@ -20,23 +20,21 @@
   }
 
   document.getElementById("myBtn").onclick = function() {
-    // Open a popup window (not tab)
+    // Open popup window
     let win = window.open('', '', 'width=800,height=600');
 
-    // Write an about:blank page with iframe
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head><title>About Blank</title></head>
-      <body style="margin:0">
-        <iframe src="https://biologistice.github.io/tuff/" 
-                style="border:none; width:100%; height:100%;">
-        </iframe>
-      </body>
-      </html>
-    `);
+    if (win) {
+      // Build the about:blank content safely
+      win.document.body.style.margin = "0";
 
-    win.document.close();
+      let iframe = win.document.createElement("iframe");
+      iframe.src = "https://biologistice.github.io/tuff/";
+      iframe.style.border = "none";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+
+      win.document.body.appendChild(iframe);
+    }
 
     // Change button color
     this.style.backgroundColor = getRandomColor();
