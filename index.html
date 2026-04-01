@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Button</title>
+</head>
+<body>
+
+<button id="myBtn" style="background-color:#f9f9f9; padding:15px 25px; border:none; cursor:pointer;">
+  Click Me
+</button>
+
+<script>
+  function getRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  document.getElementById("myBtn").onclick = function() {
+    // Open about:blank first
+    let newWindow = window.open('about:blank', '_blank');
+
+    // Then redirect it
+    newWindow.location.href = 'https://biologistice.github.io/tuff/';
+
+    // Change button color
+    this.style.backgroundColor = getRandomColor();
+  };
+</script>
+
+</body>
+</html>
