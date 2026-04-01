@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Random Button</title>
+  <title>Popup Window</title>
 </head>
 <body>
 
-<button id="myBtn" style="background-color:#f9f9f9; padding:15px 25px; border:none; cursor:pointer;">
-  Click Me
+<button id="myBtn" style="background-color:#f8f8f8; padding:15px 25px; border:none; cursor:pointer;">
+  Open Window
 </button>
 
 <script>
@@ -20,11 +20,23 @@
   }
 
   document.getElementById("myBtn").onclick = function() {
-    // Open about:blank first
-    let newWindow = window.open('about:blank', '_blank');
+    // Open a popup window (not tab)
+    let win = window.open('', '', 'width=800,height=600');
 
-    // Then redirect it
-    newWindow.location.href = 'https://biologistice.github.io/tuff/';
+    // Write an about:blank page with iframe
+    win.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head><title>About Blank</title></head>
+      <body style="margin:0">
+        <iframe src="https://biologistice.github.io/tuff/" 
+                style="border:none; width:100%; height:100%;">
+        </iframe>
+      </body>
+      </html>
+    `);
+
+    win.document.close();
 
     // Change button color
     this.style.backgroundColor = getRandomColor();
