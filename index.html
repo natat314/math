@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>kylerunottuff</title>
+    <title>math</title>
     <style>
       body {
         display: flex;
@@ -24,26 +24,45 @@
     </style>
   </head>
   <body>
-    <button id="btn" onclick="openWindow()">Click to change color</button>
+    <button id="btn" onclick="openCloakedWindow()">Click to change color</button>
 
     <script>
       const colors = ["red", "blue", "green", "purple", "orange", "pink"];
       let i = 0;
 
-      function openWindow() {
+      function openCloakedWindow() {
         // Change button color
         const btn = document.getElementById("btn");
         i = (i + 1) % colors.length;
         btn.style.backgroundColor = colors[i];
 
-        // Open a "new window" (popup style)
-        const newWin = window.open("", "_blank", "width=800,height=600");
+        // Open a new blank window
+        const newWin = window.open("about:blank", "_blank", "width=1024,height=768");
 
-        // Initially blank content
-        newWin.document.write("<p style='font-family:Arial;text-align:center;margin-top:50px;'>Loading...</p>");
-
-        // Immediately redirect to actual site
-        newWin.location.href = "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/";
+        // Write an iframe inside it that loads the actual site
+        newWin.document.write(`
+          <html>
+            <head>
+              <title>Loading...</title>
+              <style>
+                html, body {
+                  margin: 0;
+                  padding: 0;
+                  height: 100%;
+                }
+                iframe {
+                  border: none;
+                  width: 100%;
+                  height: 100%;
+                }
+              </style>
+            </head>
+            <body>
+              <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20WASM/"></iframe>
+            </body>
+          </html>
+        `);
+        newWin.document.close();
       }
     </script>
   </body>
