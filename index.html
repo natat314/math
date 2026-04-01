@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Popup Window</title>
-</head>
-<body>
+  <head>
+    <title>Launch Client</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #111;
+        font-family: Arial;
+      }
+      button {
+        padding: 20px 40px;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        background-color: red;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="btn" onclick="openSite()">Click to change color</button>
 
-<button id="myBtn" style="background-color:#f7f7f7; padding:15px 25px; border:none; cursor:pointer;">
-  Click to Change Color
-</button>
+    <script>
+      const colors = ["red", "blue", "green", "purple", "orange", "pink"];
+      let i = 0;
 
-<script>
-  function getRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+      function openSite() {
+        // Change the button color
+        const btn = document.getElementById("btn");
+        i = (i + 1) % colors.length;
+        btn.style.backgroundColor = colors[i];
 
-  document.getElementById("myBtn").onclick = function() {
-    // Open popup window
-    let win = window.open('', '', 'width=800,height=600');
-
-    if (win) {
-      // Build the about:blank content safely
-      win.document.body.style.margin = "0";
-
-      let iframe = win.document.createElement("iframe");
-      iframe.src = "https://biologistice.github.io/tuff/";
-      iframe.style.border = "none";
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-
-      win.document.body.appendChild(iframe);
-    }
-
-    // Change button color
-    this.style.backgroundColor = getRandomColor();
-  };
-</script>
-
-</body>
+        // Open "fake blank" window that redirects immediately
+        const newWin = window.open("", "_blank"); // opens a new blank tab
+        newWin.document.write("<p style='font-family:Arial;text-align:center;margin-top:50px;'>Loading client...</p>");
+        newWin.location.href = "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/";
+      }
+    </script>
+  </body>
 </html>
