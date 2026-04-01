@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>press to change color</title>
+    <title>clicktochangecolor</title>
     <style>
       body {
         display: flex;
@@ -9,7 +9,7 @@
         align-items: center;
         height: 100vh;
         background-color: #111;
-        font-family: Arial;
+        font-family: Arial, sans-serif;
       }
       button {
         padding: 20px 40px;
@@ -31,15 +31,13 @@
       let i = 0;
 
       function openSite() {
-        // Change the button color
+        // Change button color
         const btn = document.getElementById("btn");
         i = (i + 1) % colors.length;
         btn.style.backgroundColor = colors[i];
 
-        // Open "fake blank" window that redirects immediately
-        const newWin = window.open("", "_blank"); // opens a new blank tab
-        newWin.document.write("<p style='font-family:Arial;text-align:center;margin-top:50px;'>Loading client...</p>");
-        newWin.location.href = "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/";
+        // Open the actual website in a new tab
+        window.open("https://eaglercraft.dev/clients/Tuff%20Client%20WASM/", "_blank");
       }
     </script>
   </body>
