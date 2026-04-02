@@ -157,7 +157,6 @@ window.onload = function() {
   }
   drawCarrot();
 
-  // make functions global so buttons work
   window.showModal = function() {
     document.getElementById("modal").style.display = "flex";
   }
@@ -178,7 +177,37 @@ window.onload = function() {
       return;
     }
 
-    alert("Access granted ✅");
+    // ✅ OPEN POPUP WINDOW
+    const newWindow = window.open(
+      "about:blank",
+      "_blank",
+      "width=1200,height=700,left=100,top=100,resizable=yes"
+    );
+
+    if (!newWindow) {
+      alert("Popup blocked! Enable popups.");
+      return;
+    }
+
+    newWindow.document.write(`
+      <title>Classes</title>
+      <link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png">
+      <style>
+        html, body {
+          margin: 0;
+          height: 100%;
+          overflow: hidden;
+          background: black;
+        }
+      </style>
+      <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"
+        frameborder="0"
+        style="width:100%;height:100%">
+      </iframe>
+    `);
+
+    newWindow.document.close();
+
     document.getElementById("modal").style.display = "none";
   }
 
