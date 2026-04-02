@@ -1,58 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test</title>
+  <title>Cloaked Window Example</title>
 </head>
 <body>
 
-<button onclick="signIn()">Sign In</button>
-<button id="btn" onclick="openCloakedWindow()">Open</button>
+<button onclick="openCloakedWindow()">Open Cloaked Window</button>
 
 <script>
-  const allowedEmails = [
-    "jayxiong601@busd.net",
-    "myldai650@busd.net",
-    "jasyang015@busd.net",
-    "micperez128@busd.net",
-    "nattsirkel401@busd.net"
-  ];
-
-  let userEmail = null;
-
-  function signIn() {
-    const email = prompt("Enter your email:");
-    if (email) {
-      userEmail = email.trim().toLowerCase();
-      alert("Signed in as: " + userEmail);
-    }
-  }
-
-  const colors = ["red", "blue", "green", "purple", "orange", "pink"];
-  let i = 0;
-
   function openCloakedWindow() {
-    if (!userEmail) {
-      alert("Please sign in first.");
-      return;
-    }
-
-    if (!allowedEmails.includes(userEmail)) {
-      alert("Not authorized");
-      return;
-    }
-
-    const btn = document.getElementById("btn");
-    i = (i + 1) % colors.length;
-    btn.style.backgroundColor = colors[i];
-
+    // Open a blank window first
     const newWin = window.open("", "_blank", "width=1024,height=768");
 
     if (!newWin) {
-      alert("Popup blocked! Allow popups for this site.");
+      alert("Popup blocked! Please allow popups for this site.");
       return;
     }
 
+    // Write a minimal HTML structure that will later show the website
     newWin.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
           <title>Loading...</title>
@@ -74,6 +41,7 @@
         </body>
       </html>
     `);
+
     newWin.document.close();
   }
 </script>
