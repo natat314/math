@@ -12,8 +12,7 @@
       background: linear-gradient(135deg, #FF9F45, #FF6F31);
       font-family: Arial, sans-serif;
       color: #fff7e6;
-      cursor: none;
-      overflow: hidden;
+      overflow: hidden; /* cursor NOT hidden anymore */
     }
 
     .container {
@@ -71,6 +70,7 @@
       background: #FF6F31;
       opacity: 0;
       z-index: 9999;
+      pointer-events: none;
     }
 
     @keyframes shake {
@@ -83,7 +83,6 @@
 
     .shake { animation: shake 0.3s; }
 
-    /* 🚫 BLOCK SCREEN */
     #blockedScreen {
       position: fixed;
       top: 0;
@@ -110,17 +109,28 @@
       font-size: 18px;
       opacity: 0.8;
     }
+
+    #carrotCursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
 
 <div id="flash"></div>
 
-<!-- 🚫 BLOCKED PAGE -->
 <div id="blockedScreen">
   <h1>Blocked by Securely Classroom</h1>
   <p>This site has been blocked by your administrator.</p>
 </div>
+
+<canvas id="carrotCursor"></canvas>
 
 <div class="container">
   <h1>The Carrot Launcher</h1>
@@ -137,59 +147,96 @@
 </div>
 
 <script>
-function showModal() {
-  document.getElementById("modal").style.display = "flex";
-}
+  const cursorCanvas = document.getElementById('carrotCursor');
+  const ctx = cursorCanvas.getContext('2d');
 
-function getTodayPassword() {
-  const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
-  return "kylerisegg" + days[new Date().getDay()];
-}
-
-function checkPassword() {
-  const input = document.getElementById("passwordInput").value.toLowerCase();
-  if(input !== getTodayPassword()) {
-    playJumpScare();
-    return;
+  function resizeCanvas() {
+    cursorCanvas.width = window.innerWidth;
+    cursorCanvas.height = window.innerHeight;
   }
-  document.getElementById("modal").style.display = "none";
-}
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
-function playJumpScare() {
-  const scare = document.createElement('img');
-  scare.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.png';
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
 
-  scare.style.position = 'fixed';
-  scare.style.top = '50%';
-  scare.style.left = '50%';
-  scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
-  scare.style.width = '250px';
-  scare.style.zIndex = 10000;
-  scare.style.transition = 'transform 0.15s ease-out';
-  document.body.appendChild(scare);
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
 
-  setTimeout(() => {
-    scare.style.transform = 'translate(-50%, -50%) scale(1.5)';
-  }, 10);
+  function drawCarrot() {
+    ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+    ctx.save();
 
-  // sound
-  new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3').play();
+    const bounce = Math.sin(Date.now() / 150) * 5;
+    ctx.translate(mouseX, mouseY - bounce);
 
-  // flash
-  const flash = document.getElementById('flash');
-  flash.style.opacity = '0.8';
-  setTimeout(() => flash.style.opacity = '0', 150);
+    ctx.fillStyle = '#FF9F45';
+    ctx.beginPath();
+    ctx.moveTo(0, -15);
+    ctx.lineTo(10, 15);
+    ctx.lineTo(-10, 15);
+    ctx.closePath();
+    ctx.fill();
 
-  // shake
-  document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 300);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(-3, -25, 6, 10);
 
-  // after jumpscare → lock screen
-  setTimeout(() => {
-    scare.remove();
-    document.getElementById('blockedScreen').style.display = 'flex';
-  }, 1200);
-}
+    ctx.restore();
+    requestAnimationFrame(drawCarrot);
+  }
+  drawCarrot();
+
+  function showModal() {
+    document.getElementById("modal").style.display = "flex";
+  }
+
+  function getTodayPassword() {
+    const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    return "kylerisegg" + days[new Date().getDay()];
+  }
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value.toLowerCase();
+    if(input !== getTodayPassword()) {
+      playJumpScare();
+      return;
+    }
+    document.getElementById("modal").style.display = "none";
+  }
+
+  function playJumpScare() {
+    const scare = document.createElement('img');
+    scare.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.png';
+
+    scare.style.position = 'fixed';
+    scare.style.top = '50%';
+    scare.style.left = '50%';
+    scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
+    scare.style.width = '250px';
+    scare.style.zIndex = 10000;
+    scare.style.transition = 'transform 0.15s ease-out';
+    document.body.appendChild(scare);
+
+    setTimeout(() => {
+      scare.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    }, 10);
+
+    new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3').play();
+
+    const flash = document.getElementById('flash');
+    flash.style.opacity = '0.8';
+    setTimeout(() => flash.style.opacity = '0', 150);
+
+    document.body.classList.add('shake');
+    setTimeout(() => document.body.classList.remove('shake'), 300);
+
+    setTimeout(() => {
+      scare.remove();
+      document.getElementById('blockedScreen').style.display = 'flex';
+    }, 1200);
+  }
 </script>
 
 </body>
