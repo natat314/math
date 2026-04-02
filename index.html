@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Antiegg</title>
-  <!-- Favicon (egg icon) -->
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/7/73/Egg_icon.png" type="image/png">
+  <!-- Favicon (egg icon embedded as base64) -->
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABUUlEQVRYR+2XvQ3DIAxFJ0nE+zpEtxE7AJ6hC8ktCDmYpKhEys7XbI0ZwR7Zz/rI2eDcRZk4DGwBKMAa1ABo4AbmwAs3AGe/CMnIEJ8AL4h6wFWA7l/LtAYArwCsBtvB3VwE8UAGuACsD9jPVdeAGcBr+Br7Tx0tXb5O4ikMpr3FhX0FUs0QFP6B7ACAd6gCBH+4F6Ce2Q5qRoH+YXz6s+QFCkBZb0JNBO5dZVZ1CTkEEQP05kzCw3VrmAQVgKqQFy4SVgS7BXf6gxBv9IOaGUAZ+7l4mJhT+F+pA4CwDM3hBsp2jwrwAOkA4DjqB+FObnxF+Jk9C6soV5UL8xYv0EGkIfr8Fr3zYwQ8A7kgFOcCaCS3FXf/84vQFDRK4QBeOM3bAAAAAElFTkSuQmCC" type="image/png">
   <style>
     body {
       margin: 0;
@@ -106,7 +106,8 @@
 <div class="modal" id="modal">
   <div class="modal-box">
     <h3>Antiegg</h3>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Egg_icon.png" alt="Egg">
+    <!-- Embedded egg image -->
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABUUlEQVRYR+2XvQ3DIAxFJ0nE+zpEtxE7AJ6hC8ktCDmYpKhEys7XbI0ZwR7Zz/rI2eDcRZk4DGwBKMAa1ABo4AbmwAs3AGe/CMnIEJ8AL4h6wFWA7l/LtAYArwCsBtvB3VwE8UAGuACsD9jPVdeAGcBr+Br7Tx0tXb5O4ikMpr3FhX0FUs0QFP6B7ACAd6gCBH+4F6Ce2Q5qRoH+YXz6s+QFCkBZb0JNBO5dZVZ1CTkEEQP05kzCw3VrmAQVgKqQFy4SVgS7BXf6gxBv9IOaGUAZ+7l4mJhT+F+pA4CwDM3hBsp2jwrwAOkA4DjqB+FObnxF+Jk9C6soV5UL8xYv0EGkIfr8Fr3zYwQ8A7kgFOcCaCS3FXf/84vQFDRK4QBeOM3bAAAAAElFTkSuQmCC" alt="Egg">
     <input type="password" id="passwordInput" placeholder="Password...">
     <br><br>
     <button onclick="checkPassword()">Continue</button>
