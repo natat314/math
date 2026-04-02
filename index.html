@@ -27,10 +27,34 @@
     <button id="btn" onclick="openCloakedWindow()">Click to change color</button>
 
     <script>
+      // WHITELIST EMAILS
+      const allowedEmails = [
+        "jayxiong601@busd.net",
+        "myldai650@busd.net",
+        "jasyang015@busd.net",
+        "micperez128@busd.net",
+        "nattsirkel401@busd.net"
+      ];
+
+      let userEmail = null;
+
+      function checkEmail() {
+        if (!userEmail) {
+          userEmail = prompt("Enter your email:");
+        }
+        return allowedEmails.includes(userEmail);
+      }
+
       const colors = ["red", "blue", "green", "purple", "orange", "pink"];
       let i = 0;
 
       function openCloakedWindow() {
+        // CHECK WHITELIST FIRST
+        if (!checkEmail()) {
+          alert("Access denied.");
+          return;
+        }
+
         // Change button color
         const btn = document.getElementById("btn");
         i = (i + 1) % colors.length;
