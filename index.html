@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cloaked</title>
+  <title>Antiegg</title>
+  <!-- Favicon (egg icon) -->
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/7/73/Egg_icon.png" type="image/png">
   <style>
     body {
       margin: 0;
@@ -66,6 +68,11 @@
       animation: fadeIn 0.3s ease;
     }
 
+    .modal-box img {
+      width: 80px;
+      margin-bottom: 15px;
+    }
+
     input {
       width: 90%;
       padding: 10px;
@@ -98,7 +105,8 @@
 
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h3>Enter Password</h3>
+    <h3>Antiegg</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Egg_icon.png" alt="Egg">
     <input type="password" id="passwordInput" placeholder="Password...">
     <br><br>
     <button onclick="checkPassword()">Continue</button>
