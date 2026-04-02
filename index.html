@@ -2,10 +2,109 @@
 <html>
 <head>
   <title>Cloaked</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255,255,255,0.05);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: #111827;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #f87171;
+      margin-top: 10px;
+      display: none;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
 
-<button onclick="openCloaked()">Open</button>
+<div class="container">
+  <h1>Secure Access</h1>
+  <button onclick="showModal()">Open</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Enter Password</h3>
+    <input type="password" id="passwordInput" placeholder="Password...">
+    <br><br>
+    <button onclick="checkPassword()">Continue</button>
+    <div class="error" id="errorMsg">Wrong password</div>
+  </div>
+</div>
 
 <script>
   function getTodayPassword() {
@@ -18,20 +117,27 @@
       "friday",
       "saturday"
     ];
-
-    const today = new Date().getDay(); // 0–6
-    return "kylerisegg" + days[today];
+    return "kylerisegg" + days[new Date().getDay()];
   }
 
-  function openCloaked() {
-    const userPass = prompt("Enter password:");
-    const correctPass = getTodayPassword();
+  function showModal() {
+    document.getElementById("modal").style.display = "flex";
+  }
 
-    if (userPass !== correctPass) {
-      alert("Wrong password!");
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value.toLowerCase();
+    const correct = getTodayPassword();
+
+    if (input !== correct) {
+      document.getElementById("errorMsg").style.display = "block";
       return;
     }
 
+    document.getElementById("modal").style.display = "none";
+    openCloaked();
+  }
+
+  function openCloaked() {
     const newWin = window.open(
       "about:blank",
       "_blank",
@@ -54,16 +160,37 @@
               padding: 0;
               height: 100%;
               background: black;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-family: Arial;
+            }
+            .loader {
+              text-align: center;
             }
             iframe {
-              border: none;
+              position: absolute;
+              top: 0;
+              left: 0;
               width: 100%;
               height: 100%;
+              border: none;
+              display: none;
             }
           </style>
         </head>
         <body>
-          <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
+          <div class="loader">Loading...</div>
+          <iframe id="frame" src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
+
+          <script>
+            const frame = document.getElementById("frame");
+            frame.onload = () => {
+              document.querySelector(".loader").style.display = "none";
+              frame.style.display = "block";
+            };
+          <\/script>
         </body>
       </html>
     `);
