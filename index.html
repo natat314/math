@@ -1,52 +1,82 @@
-const allowedEmails = [
-  "jayxiong601@busd.net",
-  "myldai650@busd.net",
-  "jasyang015@busd.net",
-  "micperez128@busd.net",
-  "nattsirkel401@busd.net"
-];
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
 
-const colors = ["red", "blue", "green", "purple", "orange", "pink"];
-let i = 0;
+<button onclick="signIn()">Sign In</button>
+<button id="btn" onclick="openCloakedWindow()">Open</button>
 
-function openCloakedWindow() {
-  if (!userEmail) {
-    alert("Please sign in first.");
-    return;
+<script>
+  const allowedEmails = [
+    "jayxiong601@busd.net",
+    "myldai650@busd.net",
+    "jasyang015@busd.net",
+    "micperez128@busd.net",
+    "nattsirkel401@busd.net"
+  ];
+
+  let userEmail = null;
+
+  function signIn() {
+    const email = prompt("Enter your email:");
+    if (email) {
+      userEmail = email.trim().toLowerCase();
+      alert("Signed in as: " + userEmail);
+    }
   }
 
-  if (!allowedEmails.includes(userEmail)) {
-    alert("Not authorized");
-    return;
+  const colors = ["red", "blue", "green", "purple", "orange", "pink"];
+  let i = 0;
+
+  function openCloakedWindow() {
+    if (!userEmail) {
+      alert("Please sign in first.");
+      return;
+    }
+
+    if (!allowedEmails.includes(userEmail)) {
+      alert("Not authorized");
+      return;
+    }
+
+    const btn = document.getElementById("btn");
+    i = (i + 1) % colors.length;
+    btn.style.backgroundColor = colors[i];
+
+    const newWin = window.open("", "_blank", "width=1024,height=768");
+
+    if (!newWin) {
+      alert("Popup blocked! Allow popups for this site.");
+      return;
+    }
+
+    newWin.document.write(`
+      <html>
+        <head>
+          <title>Loading...</title>
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              height: 100%;
+            }
+            iframe {
+              border: none;
+              width: 100%;
+              height: 100%;
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
+        </body>
+      </html>
+    `);
+    newWin.document.close();
   }
+</script>
 
-  const btn = document.getElementById("btn");
-  i = (i + 1) % colors.length;
-  btn.style.backgroundColor = colors[i];
-
-  const newWin = window.open("about:blank", "_blank", "width=1024,height=768");
-
-  newWin.document.write(`
-    <html>
-      <head>
-        <title>Loading...</title>
-        <style>
-          html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-          }
-          iframe {
-            border: none;
-            width: 100%;
-            height: 100%;
-          }
-        </style>
-      </head>
-      <body>
-        <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
-      </body>
-    </html>
-  `);
-  newWin.document.close();
-}
+</body>
+</html>
