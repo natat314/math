@@ -1,113 +1,52 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>math</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #111;
-        font-family: Arial, sans-serif;
-      }
-      button {
-        padding: 20px 40px;
-        font-size: 20px;
-        border: none;
-        border-radius: 10px;
-        background-color: red;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="btn" onclick="openCloakedWindow()">Click to change color</button>
+const allowedEmails = [
+  "jayxiong601@busd.net",
+  "myldai650@busd.net",
+  "jasyang015@busd.net",
+  "micperez128@busd.net",
+  "nattsirkel401@busd.net"
+];
 
-    <script>
-      const allowedEmails = [
-        "jayxiong601@busd.net",
-        "myldai650@busd.net",
-        "jasyang015@busd.net",
-        "micperez128@busd.net",
-        "nattsirkel401@busd.net"
-      ];
+const colors = ["red", "blue", "green", "purple", "orange", "pink"];
+let i = 0;
 
-      let userEmail = null;
+function openCloakedWindow() {
+  if (!userEmail) {
+    alert("Please sign in first.");
+    return;
+  }
 
-      function parseJwt(token) {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        ).join(''));
-        return JSON.parse(jsonPayload);
-      }
+  if (!allowedEmails.includes(userEmail)) {
+    alert("Not authorized");
+    return;
+  }
 
-      function handleCredentialResponse(response) {
-        const data = parseJwt(response.credential);
-        userEmail = data.email;
+  const btn = document.getElementById("btn");
+  i = (i + 1) % colors.length;
+  btn.style.backgroundColor = colors[i];
 
-        if (allowedEmails.includes(userEmail)) {
-          document.getElementById("btn").style.display = "block";
-        }
-      }
+  const newWin = window.open("about:blank", "_blank", "width=1024,height=768");
 
-      window.onload = function () {
-        google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID",
-          callback: handleCredentialResponse,
-          auto_select: true, // 🔥 THIS MAKES IT AUTOMATIC
-          cancel_on_tap_outside: false
-        });
-
-        // This tries silent login
-        google.accounts.id.prompt();
-      };
-
-      const colors = ["red", "blue", "green", "purple", "orange", "pink"];
-      let i = 0;
-
-      function openCloakedWindow() {
-        if (!allowedEmails.includes(userEmail)) {
-          alert("Not authorized");
-          return;
-        }
-
-        const btn = document.getElementById("btn");
-        i = (i + 1) % colors.length;
-        btn.style.backgroundColor = colors[i];
-
-        const newWin = window.open("about:blank", "_blank", "width=1024,height=768");
-
-        newWin.document.write(`
-          <html>
-            <head>
-              <title>Loading...</title>
-              <style>
-                html, body {
-                  margin: 0;
-                  padding: 0;
-                  height: 100%;
-                }
-                iframe {
-                  border: none;
-                  width: 100%;
-                  height: 100%;
-                }
-              </style>
-            </head>
-            <body>
-              <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
-            </body>
-          </html>
-        `);
-        newWin.document.close();
-      }
-    </script>
-  </body>
-</html>
+  newWin.document.write(`
+    <html>
+      <head>
+        <title>Loading...</title>
+        <style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+          }
+          iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+          }
+        </style>
+      </head>
+      <body>
+        <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
+      </body>
+    </html>
+  `);
+  newWin.document.close();
+}
