@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Antiegg</title>
-  <!-- Favicon (egg icon embedded as base64) -->
-  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABUUlEQVRYR+2XvQ3DIAxFJ0nE+zpEtxE7AJ6hC8ktCDmYpKhEys7XbI0ZwR7Zz/rI2eDcRZk4DGwBKMAa1ABo4AbmwAs3AGe/CMnIEJ8AL4h6wFWA7l/LtAYArwCsBtvB3VwE8UAGuACsD9jPVdeAGcBr+Br7Tx0tXb5O4ikMpr3FhX0FUs0QFP6B7ACAd6gCBH+4F6Ce2Q5qRoH+YXz6s+QFCkBZb0JNBO5dZVZ1CTkEEQP05kzCw3VrmAQVgKqQFy4SVgS7BXf6gxBv9IOaGUAZ+7l4mJhT+F+pA4CwDM3hBsp2jwrwAOkA4DjqB+FObnxF+Jk9C6soV5UL8xYv0EGkIfr8Fr3zYwQ8A7kgFOcCaCS3FXf/84vQFDRK4QBeOM3bAAAAAElFTkSuQmCC" type="image/png">
+  <!-- 32x32 egg favicon embedded in base64 -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABHUlEQVRYR+2XwQ2AIAxD3f2/0+zNmxMGuJj5p+eU6v7rIZB4HZDm0z4RJBklQAUhQBFIBb4A0EAo9Y5CZz9wAUpSADWDHfN5gUSgAV1+zCz6A5A9zBco1K+cU4DUAZfJdM0vFDNqdHLgS+gS5G9DaH+gCbg3fPjK6DwB7aXZ/S1gBtwEykFSN9vAJYGbwAKi5l0pJgHj7M6V4nI+6uOAD5AWOkFur7gFJQ+SDvYZR5wA0gMoB0bZ+hx0AXkBZgR0Nzy/tgFDwGkD8ICyASQDSdCHXeoVUgAAAABJRU5ErkJggg==">
   <style>
     body {
       margin: 0;
@@ -25,10 +25,7 @@
       backdrop-filter: blur(10px);
     }
 
-    h1 {
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
+    h1 { margin-bottom: 20px; font-weight: 500; }
 
     button {
       padding: 12px 25px;
@@ -41,18 +38,13 @@
       transition: all 0.25s ease;
     }
 
-    button:hover {
-      background: #2563eb;
-      transform: scale(1.05);
-    }
+    button:hover { background: #2563eb; transform: scale(1.05); }
 
     /* Modal */
     .modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
       display: none;
       align-items: center;
@@ -83,17 +75,9 @@
       font-size: 14px;
     }
 
-    .error {
-      color: #f87171;
-      margin-top: 10px;
-      display: none;
-      font-size: 14px;
-    }
+    .error { color: #f87171; margin-top: 10px; display: none; font-size: 14px; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
   </style>
 </head>
 <body>
@@ -106,8 +90,7 @@
 <div class="modal" id="modal">
   <div class="modal-box">
     <h3>Antiegg</h3>
-    <!-- Embedded egg image -->
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABUUlEQVRYR+2XvQ3DIAxFJ0nE+zpEtxE7AJ6hC8ktCDmYpKhEys7XbI0ZwR7Zz/rI2eDcRZk4DGwBKMAa1ABo4AbmwAs3AGe/CMnIEJ8AL4h6wFWA7l/LtAYArwCsBtvB3VwE8UAGuACsD9jPVdeAGcBr+Br7Tx0tXb5O4ikMpr3FhX0FUs0QFP6B7ACAd6gCBH+4F6Ce2Q5qRoH+YXz6s+QFCkBZb0JNBO5dZVZ1CTkEEQP05kzCw3VrmAQVgKqQFy4SVgS7BXf6gxBv9IOaGUAZ+7l4mJhT+F+pA4CwDM3hBsp2jwrwAOkA4DjqB+FObnxF+Jk9C6soV5UL8xYv0EGkIfr8Fr3zYwQ8A7kgFOcCaCS3FXf/84vQFDRK4QBeOM3bAAAAAElFTkSuQmCC" alt="Egg">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Egg_icon.png/80px-Egg_icon.png" alt="Egg">
     <input type="password" id="passwordInput" placeholder="Password...">
     <br><br>
     <button onclick="checkPassword()">Continue</button>
@@ -117,93 +100,43 @@
 
 <script>
   function getTodayPassword() {
-    const days = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday"
-    ];
+    const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     return "kylerisegg" + days[new Date().getDay()];
   }
 
-  function showModal() {
-    document.getElementById("modal").style.display = "flex";
-  }
+  function showModal() { document.getElementById("modal").style.display = "flex"; }
 
   function checkPassword() {
     const input = document.getElementById("passwordInput").value.toLowerCase();
     const correct = getTodayPassword();
-
-    if (input !== correct) {
-      document.getElementById("errorMsg").style.display = "block";
-      return;
-    }
-
-    document.getElementById("modal").style.display = "none";
-    openCloaked();
+    if(input !== correct) { document.getElementById("errorMsg").style.display="block"; return; }
+    document.getElementById("modal").style.display="none"; openCloaked();
   }
 
   function openCloaked() {
-    const newWin = window.open(
-      "about:blank",
-      "_blank",
-      "width=1000,height=700,menubar=no,toolbar=no,location=no,status=no"
-    );
-
-    if (!newWin) {
-      alert("Allow popups for this site.");
-      return;
-    }
-
+    const newWin = window.open("about:blank","_blank","width=1000,height=700,menubar=no,toolbar=no,location=no,status=no");
+    if(!newWin){ alert("Allow popups for this site."); return; }
     newWin.document.write(`
       <!DOCTYPE html>
       <html>
         <head>
           <title>Loading...</title>
           <style>
-            html, body {
-              margin: 0;
-              padding: 0;
-              height: 100%;
-              background: black;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: white;
-              font-family: Arial;
-            }
-            .loader {
-              text-align: center;
-            }
-            iframe {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              border: none;
-              display: none;
-            }
+            html, body { margin:0; padding:0; height:100%; background:black; display:flex; align-items:center; justify-content:center; color:white; font-family:Arial; }
+            .loader { text-align:center; }
+            iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:none; }
           </style>
         </head>
         <body>
           <div class="loader">Loading...</div>
           <iframe id="frame" src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
-
           <script>
             const frame = document.getElementById("frame");
-            frame.onload = () => {
-              document.querySelector(".loader").style.display = "none";
-              frame.style.display = "block";
-            };
+            frame.onload = ()=>{ document.querySelector(".loader").style.display="none"; frame.style.display="block"; };
           <\/script>
         </body>
       </html>
     `);
-
     newWin.document.close();
   }
 </script>
