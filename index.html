@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>The Carrot Launcher</title>
-  <!-- 32x32 egg favicon embedded in base64 -->
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABHUlEQVRYR+2XwQ2AIAxD3f2/0+zNmxMGuJj5p+eU6v7rIZB4HZDm0z4RJBklQAUhQBFIBb4A0EAo9Y5CZz9wAUpSADWDHfN5gUSgAV1+zCz6A5A9zBco1K+cU4DUAZfJdM0vFDNqdHLgS+gS5G9DaH+gCbg3fPjK6DwB7aXZ/S1gBtwEykFSN9vAJYGbwAKi5l0pJgHj7M6V4nI+6uOAD5AWOkFur7gFJQ+SDvYZR5wA0gMoB0bZ+hx0AXkBZgR0Nzy/tgFDwGkD8ICyASQDSdCHXeoVUgAAAABJRU5ErkJggg==">
   <style>
     body {
@@ -14,9 +13,12 @@
       background: linear-gradient(135deg, #FF9F45, #FF6F31);
       font-family: Arial, sans-serif;
       color: #fff7e6;
+      overflow: hidden;
     }
 
     .container {
+      position: relative;
+      z-index: 2;
       text-align: center;
       background: rgba(255, 159, 69, 0.15);
       padding: 40px;
@@ -49,6 +51,7 @@
       display: none;
       align-items: center;
       justify-content: center;
+      z-index: 3;
     }
 
     .modal-box {
@@ -79,9 +82,22 @@
     .error { color: #ff4d4d; margin-top: 10px; display: none; font-size: 14px; }
 
     @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+
+    /* Carrot animation canvas */
+    #carrotCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+
+<canvas id="carrotCanvas"></canvas>
 
 <div class="container">
   <h1>The Carrot Launcher</h1>
@@ -100,6 +116,7 @@
 </div>
 
 <script>
+  // Password logic
   function getTodayPassword() {
     const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     return "kylerisegg" + days[new Date().getDay()];
@@ -140,6 +157,71 @@
     `);
     newWin.document.close();
   }
+
+  // Carrot bouncing animation
+  const canvas = document.getElementById("carrotCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  class Carrot {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1);
+      this.vy = (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1);
+      this.size = 40;
+      this.color = `hsl(${Math.random()*30+30}, 100%, 50%)`; // carrot orange variations
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x + this.size/2, this.y + this.size);
+      ctx.lineTo(this.x - this.size/2, this.y + this.size);
+      ctx.closePath();
+      ctx.fill();
+      // green top
+      ctx.fillStyle = 'green';
+      ctx.fillRect(this.x - this.size/8, this.y - this.size/2, this.size/4, this.size/2);
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      let bounced = false;
+      if (this.x + this.size/2 >= canvas.width || this.x - this.size/2 <= 0) {
+        this.vx *= -1; bounced = true;
+      }
+      if (this.y + this.size >= canvas.height || this.y - this.size/2 <= 0) {
+        this.vy *= -1; bounced = true;
+      }
+      if (bounced) {
+        this.color = `hsl(${Math.random()*30+30}, 100%, 50%)`; // change color on bounce
+      }
+
+      this.draw();
+    }
+  }
+
+  const carrots = [];
+  for (let i=0; i<5; i++) carrots.push(new Carrot());
+
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    carrots.forEach(c => c.update());
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
 </script>
 
 </body>
