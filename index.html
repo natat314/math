@@ -12,7 +12,7 @@
       background: linear-gradient(135deg, #FF9F45, #FF6F31);
       font-family: Arial, sans-serif;
       color: #fff7e6;
-      cursor: none; /* hide default cursor */
+      cursor: none;
       overflow: hidden;
     }
 
@@ -42,7 +42,6 @@
 
     button:hover { background: #FF7F3F; transform: scale(1.05); }
 
-    /* Modal */
     .modal {
       position: fixed;
       top: 0; left: 0;
@@ -109,7 +108,6 @@
 </div>
 
 <script>
-  // Canvas cursor
   const cursorCanvas = document.getElementById('carrotCursor');
   const ctx = cursorCanvas.getContext('2d');
 
@@ -135,16 +133,14 @@
     const bounce = Math.sin(Date.now() / 150) * 5;
     ctx.translate(mouseX, mouseY - bounce);
 
-    // carrot body
     ctx.fillStyle = '#FF9F45';
     ctx.beginPath();
-    ctx.moveTo(0, -15); // tip up
+    ctx.moveTo(0, -15);
     ctx.lineTo(10, 15);
     ctx.lineTo(-10, 15);
     ctx.closePath();
     ctx.fill();
 
-    // green top
     ctx.fillStyle = 'green';
     ctx.fillRect(-3, -25, 6, 10);
 
@@ -153,7 +149,6 @@
   }
   drawCarrot();
 
-  // Password logic
   function getTodayPassword() {
     const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     return "kylerisegg" + days[new Date().getDay()];
@@ -199,7 +194,7 @@
         const top = parseFloat(p.el.style.top) + p.y;
         p.el.style.left = left + 'px';
         p.el.style.top = top + 'px';
-        p.y += 0.5; // gravity
+        p.y += 0.5;
         p.el.style.opacity = Math.max(0, 1 - frames/30);
       });
       frames++;
@@ -211,13 +206,16 @@
 
   function playJumpScare() {
     const scare = document.createElement('img');
-    scare.src = 'https://i.imgur.com/WzB3w4l.png'; // jump scare image
+
+    // ✅ FIXED IMAGE (works reliably)
+    scare.src = 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg';
+
     scare.style.position = 'fixed';
-    scare.style.top = '50%';
-    scare.style.left = '50%';
-    scare.style.transform = 'translate(-50%,-50%)';
-    scare.style.width = '300px';
-    scare.style.height = '300px';
+    scare.style.top = '0';
+    scare.style.left = '0';
+    scare.style.width = '100vw';
+    scare.style.height = '100vh';
+    scare.style.objectFit = 'cover';
     scare.style.zIndex = 10000;
     document.body.appendChild(scare);
 
