@@ -1,4 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Carrot Launcher</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABHUlEQVRYR+2XwQ2AIAxD3f2/0+zNmxMGuJj5p+eU6v7rIZB4HZDm0z4RJBklQAUhQBFIBb4A0EAo9Y5CZz9wAUpSADWDHfN5gUSgAV1+zCz6A5A9zBco1K+cU4DUAZfJdM0vFDNqdHLgS+gS5G9DaH+gCbg3fPjK6DwB7aXZ/S1gBtwEykFSN9vAJYGbwAKi5l0pJgHj7M6V4nI+6uOAD5AWOkFur7gFJQ+SDvYZR5wA0gMoB0bZ+hx0AXkBZgR0Nzy/tgFDwGkD8ICyASQDSdCHXeoVUgAAAABJRU5ErkJggg==">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FF9F45, #FF6F31);
+      font-family: Arial, sans-serif;
+      color: #fff7e6;
+      overflow: hidden;
+      cursor: none; /* Hide default cursor */
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(255, 159, 69, 0.15);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(255, 111, 49, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 { margin-bottom: 20px; font-weight: 500; }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #FF6F31;
+      color: #fff7e6;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover { background: #FF7F3F; transform: scale(1.05); }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+
+    .modal-box {
+      background: #FF9F45;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      animation: fadeIn 0.3s ease;
+      color: #fff7e6;
+    }
+
+    .modal-box img {
+      width: 80px;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .error { color: #ff4d4d; margin-top: 10px; display: none; font-size: 14px; }
+
+    @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+
+    /* Carrot canvas & cursor */
+    #carrotCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #carrotCursor {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      z-index: 9999;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="carrotCanvas"></canvas>
+<canvas id="carrotCursor"></canvas> <!-- Cursor is drawn on canvas -->
+
+<div class="container">
+  <h1>The Carrot Launcher</h1>
+  <button onclick="showModal()">Open</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>The Carrot Launcher</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Egg_icon.png/80px-Egg_icon.png" alt="Egg">
+    <input type="password" id="passwordInput" placeholder="Password...">
+    <br><br>
+    <button onclick="checkPassword()">Continue</button>
+    <div class="error" id="errorMsg">Wrong password</div>
+  </div>
+</div>
+
 <script>
+  // Password logic
+  function getTodayPassword() {
+    const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    return "kylerisegg" + days[new Date().getDay()];
+  }
+
+  function showModal() { document.getElementById("modal").style.display = "flex"; }
+
   function checkPassword() {
     const input = document.getElementById("passwordInput").value.toLowerCase();
     const correct = getTodayPassword();
@@ -25,7 +161,6 @@
     const rect = box.getBoundingClientRect();
     const colors = ['#FF6F31','#FF9F45','#fff7e6','#FF4D4D'];
 
-    // create 30 particle divs
     for(let i=0; i<30; i++){
       const p = document.createElement('div');
       p.style.position = 'fixed';
@@ -39,9 +174,8 @@
       particles.push({el: p, x: (Math.random()-0.5)*10, y: (Math.random()-0.5)*10});
     }
 
-    box.style.display = 'none'; // hide box
+    box.style.display = 'none';
 
-    // animate particles
     let frames = 0;
     function anim() {
       particles.forEach(p => {
@@ -61,7 +195,7 @@
 
   function playJumpScare() {
     const scare = document.createElement('img');
-    scare.src = 'https://i.imgur.com/WzB3w4l.png'; // example jump scare image
+    scare.src = 'https://i.imgur.com/WzB3w4l.png';
     scare.style.position = 'fixed';
     scare.style.top = '50%';
     scare.style.left = '50%';
@@ -71,10 +205,77 @@
     scare.style.zIndex = 10000;
     document.body.appendChild(scare);
 
-    // optional scream sound
     const audio = new Audio('https://www.myinstants.com/media/sounds/scream.mp3');
     audio.play();
 
-    setTimeout(() => scare.remove(), 1500); // remove after 1.5s
+    setTimeout(() => scare.remove(), 1500);
   }
+
+  function openCloaked() {
+    const newWin = window.open("about:blank","_blank","width=1000,height=700,menubar=no,toolbar=no,location=no,status=no");
+    if(!newWin){ alert("Allow popups for this site."); return; }
+    newWin.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Loading...</title>
+          <style>
+            html, body { margin:0; padding:0; height:100%; background:#FF6F31; display:flex; align-items:center; justify-content:center; color:#fff7e6; font-family:Arial; }
+            .loader { text-align:center; }
+            iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:none; }
+          </style>
+        </head>
+        <body>
+          <div class="loader">Loading...</div>
+          <iframe id="frame" src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"></iframe>
+          <script>
+            const frame = document.getElementById("frame");
+            frame.onload = ()=>{ document.querySelector(".loader").style.display="none"; frame.style.display="block"; };
+          <\/script>
+        </body>
+      </html>
+    `);
+    newWin.document.close();
+  }
+
+  // Carrot cursor canvas
+  const cursorCanvas = document.getElementById('carrotCursor');
+  const ctxCursor = cursorCanvas.getContext('2d');
+  cursorCanvas.width = window.innerWidth;
+  cursorCanvas.height = window.innerHeight;
+
+  let mouseX = 0, mouseY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function drawCarrotCursor() {
+    ctxCursor.clearRect(0,0,cursorCanvas.width,cursorCanvas.height);
+    ctxCursor.save();
+    // bouncing effect
+    const bounce = Math.sin(Date.now()/150) * 5;
+    ctxCursor.translate(mouseX, mouseY - bounce);
+
+    // draw upright carrot
+    ctxCursor.fillStyle = '#FF9F45';
+    ctxCursor.beginPath();
+    ctxCursor.moveTo(0, -15); // tip up
+    ctxCursor.lineTo(10, 15);
+    ctxCursor.lineTo(-10, 15);
+    ctxCursor.closePath();
+    ctxCursor.fill();
+
+    // green top
+    ctxCursor.fillStyle = 'green';
+    ctxCursor.fillRect(-3, -25, 6, 10);
+    ctxCursor.restore();
+    requestAnimationFrame(drawCarrotCursor);
+  }
+
+  drawCarrotCursor();
+
 </script>
+</body>
+</html>
