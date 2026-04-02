@@ -27,8 +27,6 @@
       backdrop-filter: blur(10px);
     }
 
-    h1 { margin-bottom: 20px; font-weight: 500; }
-
     button {
       padding: 12px 25px;
       font-size: 16px;
@@ -37,10 +35,7 @@
       background: #FF6F31;
       color: #fff7e6;
       cursor: pointer;
-      transition: all 0.25s ease;
     }
-
-    button:hover { background: #FF7F3F; transform: scale(1.05); }
 
     .modal {
       position: fixed;
@@ -59,8 +54,6 @@
       border-radius: 12px;
       text-align: center;
       width: 300px;
-      animation: fadeIn 0.3s ease;
-      color: #fff7e6;
     }
 
     input {
@@ -69,23 +62,17 @@
       margin-top: 10px;
       border-radius: 8px;
       border: none;
-      outline: none;
-      font-size: 14px;
     }
 
-    @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
-
-    #carrotCursor {
+    #flash {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      pointer-events: none;
+      width: 100vw;
+      height: 100vh;
+      background: #FF6F31;
+      opacity: 0;
+      z-index: 9999;
     }
 
-    /* 🔥 screen shake */
     @keyframes shake {
       0% { transform: translate(0,0); }
       25% { transform: translate(-10px, 5px); }
@@ -94,28 +81,46 @@
       100% { transform: translate(0,0); }
     }
 
-    .shake {
-      animation: shake 0.3s;
-    }
+    .shake { animation: shake 0.3s; }
 
-    /* 🟠 orange flash */
-    #flash {
+    /* 🚫 BLOCK SCREEN */
+    #blockedScreen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: #FF6F31;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 9999;
+      background: #111;
+      color: white;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 20000;
+      text-align: center;
+    }
+
+    #blockedScreen h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+      color: #ff4d4d;
+    }
+
+    #blockedScreen p {
+      font-size: 18px;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
 
 <div id="flash"></div>
-<canvas id="carrotCursor"></canvas>
+
+<!-- 🚫 BLOCKED PAGE -->
+<div id="blockedScreen">
+  <h1>Blocked by Securely Classroom</h1>
+  <p>This site has been blocked by your administrator.</p>
+</div>
 
 <div class="container">
   <h1>The Carrot Launcher</h1>
@@ -124,110 +129,68 @@
 
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h3>The Carrot Launcher</h3>
-    <input type="password" id="passwordInput" placeholder="Password...">
+    <h3>Password</h3>
+    <input type="password" id="passwordInput">
     <br><br>
     <button onclick="checkPassword()">Continue</button>
   </div>
 </div>
 
 <script>
-  const cursorCanvas = document.getElementById('carrotCursor');
-  const ctx = cursorCanvas.getContext('2d');
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
 
-  function resizeCanvas() {
-    cursorCanvas.width = window.innerWidth;
-    cursorCanvas.height = window.innerHeight;
+function getTodayPassword() {
+  const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+  return "kylerisegg" + days[new Date().getDay()];
+}
+
+function checkPassword() {
+  const input = document.getElementById("passwordInput").value.toLowerCase();
+  if(input !== getTodayPassword()) {
+    playJumpScare();
+    return;
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+  document.getElementById("modal").style.display = "none";
+}
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
+function playJumpScare() {
+  const scare = document.createElement('img');
+  scare.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.png';
 
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+  scare.style.position = 'fixed';
+  scare.style.top = '50%';
+  scare.style.left = '50%';
+  scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
+  scare.style.width = '250px';
+  scare.style.zIndex = 10000;
+  scare.style.transition = 'transform 0.15s ease-out';
+  document.body.appendChild(scare);
 
-  function drawCarrot() {
-    ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-    ctx.save();
+  setTimeout(() => {
+    scare.style.transform = 'translate(-50%, -50%) scale(1.5)';
+  }, 10);
 
-    const bounce = Math.sin(Date.now() / 150) * 5;
-    ctx.translate(mouseX, mouseY - bounce);
+  // sound
+  new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3').play();
 
-    ctx.fillStyle = '#FF9F45';
-    ctx.beginPath();
-    ctx.moveTo(0, -15);
-    ctx.lineTo(10, 15);
-    ctx.lineTo(-10, 15);
-    ctx.closePath();
-    ctx.fill();
+  // flash
+  const flash = document.getElementById('flash');
+  flash.style.opacity = '0.8';
+  setTimeout(() => flash.style.opacity = '0', 150);
 
-    ctx.fillStyle = 'green';
-    ctx.fillRect(-3, -25, 6, 10);
+  // shake
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 300);
 
-    ctx.restore();
-    requestAnimationFrame(drawCarrot);
-  }
-  drawCarrot();
-
-  function getTodayPassword() {
-    const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
-    return "kylerisegg" + days[new Date().getDay()];
-  }
-
-  function showModal() {
-    document.getElementById("modal").style.display = "flex";
-  }
-
-  function checkPassword() {
-    const input = document.getElementById("passwordInput").value.toLowerCase();
-    const correct = getTodayPassword();
-    if(input !== correct) {
-      playJumpScare();
-      return;
-    }
-    document.getElementById("modal").style.display = "none";
-  }
-
-  function playJumpScare() {
-    const scare = document.createElement('img');
-
-    // 🥕 RELIABLE carrot image (won’t break)
-    scare.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.png';
-
-    scare.style.position = 'fixed';
-    scare.style.top = '50%';
-    scare.style.left = '50%';
-    scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
-    scare.style.width = '250px';
-    scare.style.zIndex = 10000;
-    scare.style.transition = 'transform 0.15s ease-out';
-    document.body.appendChild(scare);
-
-    setTimeout(() => {
-      scare.style.transform = 'translate(-50%, -50%) scale(1.5)';
-    }, 10);
-
-    // 🔊 GET OUT sound
-    const audio = new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3');
-    audio.play();
-
-    // 🟠 flash
-    const flash = document.getElementById('flash');
-    flash.style.opacity = '0.8';
-    setTimeout(() => flash.style.opacity = '0', 150);
-
-    // 💥 shake
-    document.body.classList.add('shake');
-    setTimeout(() => document.body.classList.remove('shake'), 300);
-
-    setTimeout(() => {
-      scare.remove();
-    }, 1200);
-  }
+  // after jumpscare → lock screen
+  setTimeout(() => {
+    scare.remove();
+    document.getElementById('blockedScreen').style.display = 'flex';
+  }, 1200);
+}
 </script>
+
 </body>
 </html>
