@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>math</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
       body {
         display: flex;
@@ -20,6 +21,7 @@
         color: white;
         cursor: pointer;
         transition: background-color 0.3s;
+        display: none;
       }
     </style>
   </head>
@@ -27,7 +29,6 @@
     <button id="btn" onclick="openCloakedWindow()">Click to change color</button>
 
     <script>
-      // WHITELIST EMAILS
       const allowedEmails = [
         "jayxiong601@busd.net",
         "myldai650@busd.net",
@@ -38,32 +39,51 @@
 
       let userEmail = null;
 
-      function checkEmail() {
-        if (!userEmail) {
-          userEmail = prompt("Enter your email:");
-        }
-        return allowedEmails.includes(userEmail);
+      function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+        return JSON.parse(jsonPayload);
       }
+
+      function handleCredentialResponse(response) {
+        const data = parseJwt(response.credential);
+        userEmail = data.email;
+
+        if (allowedEmails.includes(userEmail)) {
+          document.getElementById("btn").style.display = "block";
+        }
+      }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID",
+          callback: handleCredentialResponse,
+          auto_select: true, // 🔥 THIS MAKES IT AUTOMATIC
+          cancel_on_tap_outside: false
+        });
+
+        // This tries silent login
+        google.accounts.id.prompt();
+      };
 
       const colors = ["red", "blue", "green", "purple", "orange", "pink"];
       let i = 0;
 
       function openCloakedWindow() {
-        // CHECK WHITELIST FIRST
-        if (!checkEmail()) {
-          alert("Access denied.");
+        if (!allowedEmails.includes(userEmail)) {
+          alert("Not authorized");
           return;
         }
 
-        // Change button color
         const btn = document.getElementById("btn");
         i = (i + 1) % colors.length;
         btn.style.backgroundColor = colors[i];
 
-        // Open a new blank window
         const newWin = window.open("about:blank", "_blank", "width=1024,height=768");
 
-        // Write an iframe inside it that loads the actual site
         newWin.document.write(`
           <html>
             <head>
