@@ -9,7 +9,11 @@
 
 <script>
   function openCloaked() {
-    const newWin = window.open("about:blank", "_blank");
+    const newWin = window.open(
+      "about:blank",
+      "_blank",
+      "width=1000,height=700,menubar=no,toolbar=no,location=no,status=no"
+    );
 
     if (!newWin) {
       alert("Allow popups for this site.");
