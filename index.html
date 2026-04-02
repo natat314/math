@@ -8,7 +8,30 @@
 <button onclick="openCloaked()">Open</button>
 
 <script>
+  function getTodayPassword() {
+    const days = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday"
+    ];
+
+    const today = new Date().getDay(); // 0–6
+    return "kylerisegg" + days[today];
+  }
+
   function openCloaked() {
+    const userPass = prompt("Enter password:");
+    const correctPass = getTodayPassword();
+
+    if (userPass !== correctPass) {
+      alert("Wrong password!");
+      return;
+    }
+
     const newWin = window.open(
       "about:blank",
       "_blank",
