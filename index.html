@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cloaked Window Example</title>
+  <title>Cloaked</title>
 </head>
 <body>
 
-<button onclick="openCloakedWindow()">Open Cloaked Window</button>
+<button onclick="openCloaked()">Open</button>
 
 <script>
-  function openCloakedWindow() {
-    // Open a blank window first
-    const newWin = window.open("", "_blank", "width=1024,height=768");
+  function openCloaked() {
+    const newWin = window.open("about:blank", "_blank");
 
     if (!newWin) {
-      alert("Popup blocked! Please allow popups for this site.");
+      alert("Allow popups for this site.");
       return;
     }
 
-    // Write a minimal HTML structure that will later show the website
     newWin.document.write(`
       <!DOCTYPE html>
       <html>
@@ -28,6 +26,7 @@
               margin: 0;
               padding: 0;
               height: 100%;
+              background: black;
             }
             iframe {
               border: none;
