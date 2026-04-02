@@ -1,33 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Carrot Launcher</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FF9F45, #FF6F31);
+      font-family: Arial, sans-serif;
+      color: #fff7e6;
+      cursor: none;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(255, 159, 69, 0.15);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(255, 111, 49, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 { margin-bottom: 20px; font-weight: 500; }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #FF6F31;
+      color: #fff7e6;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover { background: #FF7F3F; transform: scale(1.05); }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+
+    .modal-box {
+      background: #FF9F45;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      animation: fadeIn 0.3s ease;
+      color: #fff7e6;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .error { color: #ff4d4d; margin-top: 10px; display: none; font-size: 14px; }
+
+    @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+
+    #carrotCursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="carrotCursor"></canvas>
+
+<div class="container">
+  <h1>The Carrot Launcher</h1>
+  <button onclick="showModal()">Open</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>The Carrot Launcher</h3>
+    <input type="password" id="passwordInput" placeholder="Password...">
+    <br><br>
+    <button onclick="checkPassword()">Continue</button>
+    <div class="error" id="errorMsg">Wrong password</div>
+  </div>
+</div>
+
 <script>
-function playJumpScare() {
-  const scare = document.createElement('img');
+  const cursorCanvas = document.getElementById('carrotCursor');
+  const ctx = cursorCanvas.getContext('2d');
 
-  // 🥕 Evil carrot image
-  scare.src = 'https://i.imgur.com/8Qf6K3R.png'; // evil carrot (works better than old link)
+  function resizeCanvas() {
+    cursorCanvas.width = window.innerWidth;
+    cursorCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
-  scare.style.position = 'fixed';
-  scare.style.top = '50%';
-  scare.style.left = '50%';
-  scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
-  scare.style.width = '300px';
-  scare.style.height = '300px';
-  scare.style.objectFit = 'contain';
-  scare.style.zIndex = 10000;
-  scare.style.transition = 'transform 0.2s ease-out';
-  document.body.appendChild(scare);
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
 
-  // 💥 pop-in animation
-  setTimeout(() => {
-    scare.style.transform = 'translate(-50%, -50%) scale(1.3)';
-  }, 10);
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
 
-  // 🔊 GET OUT sound
-  const audio = new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3');
-  audio.volume = 1;
-  audio.play();
+  function drawCarrot() {
+    ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+    ctx.save();
 
-  setTimeout(() => {
-    scare.remove();
-  }, 1500);
-}
+    const bounce = Math.sin(Date.now() / 150) * 5;
+    ctx.translate(mouseX, mouseY - bounce);
+
+    ctx.fillStyle = '#FF9F45';
+    ctx.beginPath();
+    ctx.moveTo(0, -15);
+    ctx.lineTo(10, 15);
+    ctx.lineTo(-10, 15);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = 'green';
+    ctx.fillRect(-3, -25, 6, 10);
+
+    ctx.restore();
+    requestAnimationFrame(drawCarrot);
+  }
+  drawCarrot();
+
+  function getTodayPassword() {
+    const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    return "kylerisegg" + days[new Date().getDay()];
+  }
+
+  function showModal() { document.getElementById("modal").style.display = "flex"; }
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value.toLowerCase();
+    const correct = getTodayPassword();
+    if(input !== correct) {
+      explodeBox(document.querySelector('.modal-box'));
+      playJumpScare();
+      return;
+    }
+    document.getElementById("modal").style.display = "none";
+  }
+
+  function explodeBox(box) {
+    const particles = [];
+    const rect = box.getBoundingClientRect();
+    const colors = ['#FF6F31','#FF9F45','#fff7e6','#FF4D4D'];
+
+    for(let i=0; i<30; i++){
+      const p = document.createElement('div');
+      p.style.position = 'fixed';
+      p.style.width = p.style.height = Math.random()*8 + 4 + 'px';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.left = rect.left + rect.width/2 + 'px';
+      p.style.top = rect.top + rect.height/2 + 'px';
+      p.style.borderRadius = '50%';
+      p.style.zIndex = 9999;
+      document.body.appendChild(p);
+      particles.push({el: p, x: (Math.random()-0.5)*10, y: (Math.random()-0.5)*10});
+    }
+
+    box.style.display = 'none';
+
+    let frames = 0;
+    function anim() {
+      particles.forEach(p => {
+        const left = parseFloat(p.el.style.left) + p.x;
+        const top = parseFloat(p.el.style.top) + p.y;
+        p.el.style.left = left + 'px';
+        p.el.style.top = top + 'px';
+        p.y += 0.5;
+        p.el.style.opacity = Math.max(0, 1 - frames/30);
+      });
+      frames++;
+      if(frames < 30) requestAnimationFrame(anim);
+      else particles.forEach(p => p.el.remove());
+    }
+    anim();
+  }
+
+  function playJumpScare() {
+    const scare = document.createElement('img');
+
+    // 🥕 Evil carrot (centered)
+    scare.src = 'https://i.imgur.com/8Qf6K3R.png';
+
+    scare.style.position = 'fixed';
+    scare.style.top = '50%';
+    scare.style.left = '50%';
+    scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
+    scare.style.width = '300px';
+    scare.style.height = '300px';
+    scare.style.objectFit = 'contain';
+    scare.style.zIndex = 10000;
+    scare.style.transition = 'transform 0.2s ease-out';
+    document.body.appendChild(scare);
+
+    // pop animation
+    setTimeout(() => {
+      scare.style.transform = 'translate(-50%, -50%) scale(1.3)';
+    }, 10);
+
+    // 🔊 GET OUT sound
+    const audio = new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3');
+    audio.volume = 1;
+    audio.play();
+
+    setTimeout(() => {
+      scare.remove();
+    }, 1500);
+  }
 </script>
+</body>
+</html>
