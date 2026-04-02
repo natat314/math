@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Antiegg</title>
+  <title>The Carrot Launcher</title>
   <!-- 32x32 egg favicon embedded in base64 -->
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABHUlEQVRYR+2XwQ2AIAxD3f2/0+zNmxMGuJj5p+eU6v7rIZB4HZDm0z4RJBklQAUhQBFIBb4A0EAo9Y5CZz9wAUpSADWDHfN5gUSgAV1+zCz6A5A9zBco1K+cU4DUAZfJdM0vFDNqdHLgS+gS5G9DaH+gCbg3fPjK6DwB7aXZ/S1gBtwEykFSN9vAJYGbwAKi5l0pJgHj7M6V4nI+6uOAD5AWOkFur7gFJQ+SDvYZR5wA0gMoB0bZ+hx0AXkBZgR0Nzy/tgFDwGkD8ICyASQDSdCHXeoVUgAAAABJRU5ErkJggg==">
   <style>
@@ -11,17 +11,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
+      background: linear-gradient(135deg, #FF9F45, #FF6F31);
       font-family: Arial, sans-serif;
-      color: white;
+      color: #fff7e6;
     }
 
     .container {
       text-align: center;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 159, 69, 0.15);
       padding: 40px;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 30px rgba(255, 111, 49, 0.4);
       backdrop-filter: blur(10px);
     }
 
@@ -32,32 +32,33 @@
       font-size: 16px;
       border: none;
       border-radius: 10px;
-      background: #3b82f6;
-      color: white;
+      background: #FF6F31;
+      color: #fff7e6;
       cursor: pointer;
       transition: all 0.25s ease;
     }
 
-    button:hover { background: #2563eb; transform: scale(1.05); }
+    button:hover { background: #FF7F3F; transform: scale(1.05); }
 
     /* Modal */
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       display: none;
       align-items: center;
       justify-content: center;
     }
 
     .modal-box {
-      background: #111827;
+      background: #FF9F45;
       padding: 30px;
       border-radius: 12px;
       text-align: center;
       width: 300px;
       animation: fadeIn 0.3s ease;
+      color: #fff7e6;
     }
 
     .modal-box img {
@@ -75,7 +76,7 @@
       font-size: 14px;
     }
 
-    .error { color: #f87171; margin-top: 10px; display: none; font-size: 14px; }
+    .error { color: #ff4d4d; margin-top: 10px; display: none; font-size: 14px; }
 
     @keyframes fadeIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
   </style>
@@ -83,13 +84,13 @@
 <body>
 
 <div class="container">
-  <h1>Secure Access</h1>
+  <h1>The Carrot Launcher</h1>
   <button onclick="showModal()">Open</button>
 </div>
 
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h3>Antiegg</h3>
+    <h3>The Carrot Launcher</h3>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Egg_icon.png/80px-Egg_icon.png" alt="Egg">
     <input type="password" id="passwordInput" placeholder="Password...">
     <br><br>
@@ -122,7 +123,7 @@
         <head>
           <title>Loading...</title>
           <style>
-            html, body { margin:0; padding:0; height:100%; background:black; display:flex; align-items:center; justify-content:center; color:white; font-family:Arial; }
+            html, body { margin:0; padding:0; height:100%; background:#FF6F31; display:flex; align-items:center; justify-content:center; color:#fff7e6; font-family:Arial; }
             .loader { text-align:center; }
             iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:none; }
           </style>
