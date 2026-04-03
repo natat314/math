@@ -53,7 +53,7 @@
 <body>
 
 <div class="container">
-  <h1>🥕 Carrot Launcher</h1>
+  <h1>🥕 Carrot Launcher V<2.0/h1>
   <button onclick="showModal()">Open</button>
 </div>
 
@@ -79,19 +79,19 @@ window.onload = function() {
     document.getElementById("modal").style.display = "flex";
   };
 
-  // 🎮 DEV PANEL
+  // 🎮 HACKER TERMINAL
   function openDevPanel() {
     const win = window.open("", "_blank", "width=600,height=500,left=200,top=100");
 
     win.document.write(`
       <style>
         body { background:black; color:#0f0; font-family:monospace; padding:10px; }
-        #terminal { white-space: pre-wrap; }
+        #terminal { white-space: pre-wrap; height:90%; overflow-y:auto; }
         input { background:black; color:#0f0; border:none; outline:none; width:90%; }
       </style>
 
       <div id="terminal"></div>
-      <div>> <input id="cmd"></div>
+      <div>> <input id="cmd" autofocus></div>
     `);
 
     win.document.close();
@@ -99,35 +99,106 @@ window.onload = function() {
     const term = win.document.getElementById("terminal");
     const input = win.document.getElementById("cmd");
 
-    function print(text) {
-      term.innerHTML += text + "\\n";
+    function typeText(text, speed = 15, callback) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          term.innerHTML += text.charAt(i);
+          i++;
+          term.scrollTop = term.scrollHeight;
+          setTimeout(typing, speed);
+        } else {
+          term.innerHTML += "\\n";
+          if (callback) callback();
+        }
+      }
+      typing();
     }
 
-    print("CarrotOS v1.0");
-    print("Type 'help'");
+    function fakeLogs(callback) {
+      const logs = [
+        "Initializing modules...",
+        "Connecting to core system...",
+        "Bypassing security...",
+        "Accessing kernel...",
+        "Injecting commands...",
+        "Finalizing..."
+      ];
 
-    input.focus();
+      let i = 0;
+      function next() {
+        if (i < logs.length) {
+          typeText(logs[i], 10, () => {
+            i++;
+            next();
+          });
+        } else {
+          callback();
+        }
+      }
+      next();
+    }
+
+    function bootLogs() {
+      typeText("CarrotOS v2.0", 20, () => {
+        typeText("Loading system...", 15, () => {
+          typeText("Ready.");
+        });
+      });
+    }
+
+    bootLogs();
 
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         const cmd = input.value.toLowerCase().trim();
-        print("> " + cmd);
+        typeText("> " + cmd, 5);
         handle(cmd);
         input.value = "";
       }
     });
 
     function handle(cmd) {
-      if (cmd === "help") print("status / enable / disable / clear");
-      else if (cmd === "status") print(siteEnabled ? "ENABLED" : "DISABLED");
-      else if (cmd === "enable") { siteEnabled = true; saveState(); print("ENABLED"); }
-      else if (cmd === "disable") { siteEnabled = false; saveState(); print("DISABLED"); }
-      else if (cmd === "clear") term.innerHTML = "";
-      else print("unknown command");
+      if (cmd === "help") {
+        typeText("Commands: status / enable / disable / clear");
+      }
+
+      else if (cmd === "status") {
+        typeText(siteEnabled ? "🟢 ENABLED" : "🔴 DISABLED");
+      }
+
+      else if (cmd === "enable") {
+        typeText("Enabling system...", 15, () => {
+          fakeLogs(() => {
+            siteEnabled = true;
+            saveState();
+            typeText("✔ SYSTEM ENABLED");
+          });
+        });
+      }
+
+      else if (cmd === "disable") {
+        typeText("Disabling system...", 15, () => {
+          fakeLogs(() => {
+            siteEnabled = false;
+            saveState();
+            typeText("✖ SYSTEM DISABLED");
+          });
+        });
+      }
+
+      else if (cmd === "clear") {
+        term.innerHTML = "";
+        bootLogs();
+      }
+
+      else {
+        typeText("Unknown command");
+      }
     }
   }
 
-  // 🚀 POPUP WINDOW (NOT TAB)
+  // 🚀 CLOAKED POPUP WINDOW (NOT TAB)
   function openCloakedWindow() {
     const newWindow = window.open(
       "about:blank",
@@ -136,7 +207,7 @@ window.onload = function() {
     );
 
     if (!newWindow) {
-      alert("Popup blocked! Enable popups.");
+      alert("Popup blocked!");
       return;
     }
 
@@ -166,7 +237,7 @@ window.onload = function() {
     }
 
     if (input === "kylerisrooegg") {
-      openCloakedWindow(); // ✅ THIS IS NOW A WINDOW
+      openCloakedWindow();
       document.getElementById("modal").style.display = "none";
       return;
     }
