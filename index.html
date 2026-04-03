@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>The Carrot Launcher</title>
+
   <style>
     body {
       margin: 0;
@@ -9,179 +10,129 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #FF9F45, #FF6F31);
-      font-family: Arial, sans-serif;
-      color: #fff7e6;
-      overflow: hidden;
+      background: black;
+      font-family: Arial;
+      color: white;
     }
 
     .container {
-      position: relative;
-      z-index: 2;
       text-align: center;
-      background: rgba(255, 159, 69, 0.15);
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(255, 111, 49, 0.4);
-      backdrop-filter: blur(10px);
     }
 
     button {
       padding: 12px 25px;
-      font-size: 16px;
       border: none;
       border-radius: 10px;
-      background: #FF6F31;
-      color: #fff7e6;
+      background: orange;
+      color: white;
       cursor: pointer;
     }
 
     .modal {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      inset: 0;
+      background: rgba(0,0,0,0.8);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 3;
     }
 
     .modal-box {
-      background: #FF9F45;
-      padding: 30px;
-      border-radius: 12px;
-      text-align: center;
-      width: 300px;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
     }
 
     input {
-      width: 90%;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
-    }
-
-    #flash {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      background: #FF6F31;
-      opacity: 0;
-      z-index: 9999;
-      pointer-events: none;
-    }
-
-    @keyframes shake {
-      0% { transform: translate(0,0); }
-      25% { transform: translate(-10px, 5px); }
-      50% { transform: translate(10px, -5px); }
-      75% { transform: translate(-5px, 10px); }
-      100% { transform: translate(0,0); }
-    }
-
-    .shake { animation: shake 0.3s; }
-
-    #carrotCursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-<div id="flash"></div>
-<canvas id="carrotCursor"></canvas>
-
 <div class="container">
-  <h1>The Carrot Launcher</h1>
+  <h1>🥕 Carrot Launcher</h1>
   <button onclick="showModal()">Open</button>
 </div>
 
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h3>Password</h3>
-    <input type="password" id="passwordInput">
+    <input type="password" id="passwordInput" placeholder="Password">
     <br><br>
-    <button onclick="checkPassword()">Continue</button>
+    <button onclick="checkPassword()">Enter</button>
   </div>
 </div>
 
 <script>
 window.onload = function() {
 
-  const cursorCanvas = document.getElementById('carrotCursor');
-  const ctx = cursorCanvas.getContext('2d');
+  let siteEnabled = JSON.parse(localStorage.getItem("siteEnabled"));
+  if (siteEnabled === null) siteEnabled = true;
 
-  function resizeCanvas() {
-    cursorCanvas.width = window.innerWidth;
-    cursorCanvas.height = window.innerHeight;
+  function saveState() {
+    localStorage.setItem("siteEnabled", JSON.stringify(siteEnabled));
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function drawCarrot() {
-    ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-    ctx.save();
-
-    const bounce = Math.sin(Date.now() / 150) * 5;
-    ctx.translate(mouseX, mouseY - bounce);
-
-    ctx.fillStyle = '#FF9F45';
-    ctx.beginPath();
-    ctx.moveTo(0, -15);
-    ctx.lineTo(10, 15);
-    ctx.lineTo(-10, 15);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = 'green';
-    ctx.fillRect(-3, -25, 6, 10);
-
-    ctx.restore();
-    requestAnimationFrame(drawCarrot);
-  }
-  drawCarrot();
 
   window.showModal = function() {
     document.getElementById("modal").style.display = "flex";
-  }
+  };
 
-  // ✅ UPDATED PASSWORD
-  function getTodayPassword() {
-    return "kylerisrooegg";
-  }
+  // 🎮 DEV PANEL
+  function openDevPanel() {
+    const win = window.open("", "_blank", "width=600,height=500,left=200,top=100");
 
-  window.checkPassword = function() {
-    const input = document.getElementById("passwordInput").value
-      .trim()
-      .toLowerCase();
+    win.document.write(`
+      <style>
+        body { background:black; color:#0f0; font-family:monospace; padding:10px; }
+        #terminal { white-space: pre-wrap; }
+        input { background:black; color:#0f0; border:none; outline:none; width:90%; }
+      </style>
 
-    const correct = getTodayPassword();
+      <div id="terminal"></div>
+      <div>> <input id="cmd"></div>
+    `);
 
-    if (input !== correct) {
-      playJumpScare();
-      return;
+    win.document.close();
+
+    const term = win.document.getElementById("terminal");
+    const input = win.document.getElementById("cmd");
+
+    function print(text) {
+      term.innerHTML += text + "\\n";
     }
 
+    print("CarrotOS v1.0");
+    print("Type 'help'");
+
+    input.focus();
+
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        const cmd = input.value.toLowerCase().trim();
+        print("> " + cmd);
+        handle(cmd);
+        input.value = "";
+      }
+    });
+
+    function handle(cmd) {
+      if (cmd === "help") print("status / enable / disable / clear");
+      else if (cmd === "status") print(siteEnabled ? "ENABLED" : "DISABLED");
+      else if (cmd === "enable") { siteEnabled = true; saveState(); print("ENABLED"); }
+      else if (cmd === "disable") { siteEnabled = false; saveState(); print("DISABLED"); }
+      else if (cmd === "clear") term.innerHTML = "";
+      else print("unknown command");
+    }
+  }
+
+  // 🚀 POPUP WINDOW (NOT TAB)
+  function openCloakedWindow() {
     const newWindow = window.open(
       "about:blank",
       "_blank",
-      "width=1200,height=700,left=100,top=100,resizable=yes"
+      "width=1200,height=700,left=100,top=50,resizable=yes"
     );
 
     if (!newWindow) {
@@ -189,61 +140,53 @@ window.onload = function() {
       return;
     }
 
-    newWindow.document.write(`
-      <title>Classes</title>
-      <link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png">
-      <style>
-        html, body {
-          margin: 0;
-          height: 100%;
-          overflow: hidden;
-          background: black;
-        }
-      </style>
-      <iframe src="https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/"
-        frameborder="0"
-        style="width:100%;height:100%">
-      </iframe>
-    `);
+    newWindow.document.write(
+      "<title>about:blank</title>" +
+      "<style>html,body{margin:0;height:100%;background:black;}</style>" +
+      "<iframe src='https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/' " +
+      "style='width:100%;height:100%;border:none;'></iframe>"
+    );
 
     newWindow.document.close();
-
-    document.getElementById("modal").style.display = "none";
   }
 
-  function playJumpScare() {
-    const scare = document.createElement('img');
-    scare.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.png';
+  window.checkPassword = function() {
+    const input = document.getElementById("passwordInput").value
+      .trim()
+      .toLowerCase();
 
-    scare.style.position = 'fixed';
-    scare.style.top = '50%';
-    scare.style.left = '50%';
-    scare.style.transform = 'translate(-50%, -50%) scale(0.1)';
-    scare.style.width = '250px';
-    scare.style.zIndex = 10000;
-    scare.style.transition = 'transform 0.15s ease-out';
-    document.body.appendChild(scare);
-
-    setTimeout(() => {
-      scare.style.transform = 'translate(-50%, -50%) scale(1.5)';
-    }, 10);
-
-    new Audio('https://www.myinstants.com/media/sounds/get-out-sound-effect.mp3').play();
-
-    const flash = document.getElementById('flash');
-    flash.style.opacity = '0.8';
-    setTimeout(() => flash.style.opacity = '0', 150);
-
-    document.body.classList.add('shake');
-    setTimeout(() => document.body.classList.remove('shake'), 300);
-
-    if (document.body.requestPointerLock) {
-      document.body.requestPointerLock();
+    if (["carrotdev","carrotdevtools","carrotdevtool"].includes(input)) {
+      openDevPanel();
+      return;
     }
 
-    setTimeout(() => {
-      scare.remove();
-    }, 1200);
+    if (!siteEnabled) {
+      playJumpScare();
+      return;
+    }
+
+    if (input === "kylerisrooegg") {
+      openCloakedWindow(); // ✅ THIS IS NOW A WINDOW
+      document.getElementById("modal").style.display = "none";
+      return;
+    }
+
+    playJumpScare();
+  };
+
+  function playJumpScare() {
+    const scare = document.createElement("div");
+    scare.innerText = "🥕";
+    scare.style.position = "fixed";
+    scare.style.top = "50%";
+    scare.style.left = "50%";
+    scare.style.transform = "translate(-50%,-50%) scale(5)";
+    scare.style.fontSize = "100px";
+    scare.style.zIndex = 9999;
+
+    document.body.appendChild(scare);
+
+    setTimeout(() => scare.remove(), 800);
   }
 
 };
