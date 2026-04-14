@@ -1,34 +1,288 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Random Button</title>
+  <title>The Carrot Launcher</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: orange;
+      filter: blur(180px);
+      opacity: 0.15;
+      top: -100px;
+      left: -100px;
+    }
+
+    .container {
+      text-align: center;
+      padding: 30px 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    button {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, orange, #ff6a00);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-box {
+      background: rgba(20,20,20,0.95);
+      padding: 25px;
+      border-radius: 16px;
+      width: 280px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #111;
+      color: white;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    label {
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 8px 0;
+      opacity: 0.8;
+    }
+  </style>
 </head>
+
 <body>
 
-<button id="myBtn" style="background-color:#f9f9f9; padding:15px 25px; border:none; cursor:pointer;">
-  Click Me
-</button>
+<div class="container">
+  <h1>🥕 Carrot Launcher</h1>
+  <button onclick="showModal()">Open</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <input type="password" id="passwordInput" placeholder="Password">
+
+    <label>
+      <input type="checkbox" id="rememberPass">
+      Remember password
+    </label>
+
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+</div>
 
 <script>
-  function getRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+
+/////////////////////////////////////////////////////
+// 🔥 FORCE ALWAYS START ENABLED (KEY FIX)
+/////////////////////////////////////////////////////
+localStorage.setItem("siteEnabled", "true");
+
+/////////////////////////////////////////////////////
+// UI
+/////////////////////////////////////////////////////
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+
+/////////////////////////////////////////////////////
+// 🎮 GAME HUB (NO STARTUP BLOCKING)
+/////////////////////////////////////////////////////
+function openGameHub() {
+
+  const win = window.open("", "_blank", "width=1200,height=700");
+
+  win.document.write(`
+    <title>Carrot Game Hub</title>
+
+    <style>
+      body { margin:0; font-family:Arial; background:#000; color:white; display:flex; height:100vh; }
+      .sidebar { width:240px; background:#111; padding:12px; transition:0.3s; }
+      .sidebar.hidden { width:0; padding:0; overflow:hidden; }
+      .btn { width:100%; margin:6px 0; padding:10px; border:none; border-radius:8px; background:orange; }
+      iframe { flex:1; border:none; }
+      .topbar { padding:6px; background:#0a0a0a; text-align:center; }
+      .smallbtn { padding:6px 10px; margin:4px; background:#222; color:white; border-radius:6px; }
+    </style>
+
+    <div class="sidebar" id="sidebar">
+      <h3>🎮 Games</h3>
+      <button class="btn" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Minecraft</button>
+      <button class="btn" onclick="loadGame('https://2048game.com/')">2048</button>
+      <button class="btn" onclick="loadGame('https://tetris.com/play-tetris')">Tetris</button>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="topbar">
+        <button class="smallbtn" onclick="toggleSidebar()">Hide</button>
+        <button class="smallbtn" onclick="toggleFullscreen()">Fullscreen</button>
+      </div>
+
+      <iframe id="game"></iframe>
+    </div>
+
+    <script>
+      const frame = document.getElementById("game");
+      const sidebar = document.getElementById("sidebar");
+
+      function loadGame(url){ frame.src = url; }
+      function toggleSidebar(){ sidebar.classList.toggle("hidden"); }
+
+      function toggleFullscreen(){
+        if(!document.fullscreenElement){
+          document.documentElement.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      document.addEventListener("keydown", e=>{
+        if(e.key === "Escape") document.exitFullscreen();
+      });
+
+      loadGame("https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/");
+    <\/script>
+  `);
+}
+
+/////////////////////////////////////////////////////
+// 💻 TERMINAL (ALWAYS ACCESSIBLE)
+/////////////////////////////////////////////////////
+function openTerminal() {
+
+  const win = window.open("", "_blank", "width=600,height=500");
+
+  win.document.write(`
+    <style>
+      body { margin:0; background:black; color:#0f0; font-family:monospace; padding:10px; }
+      input { width:100%; background:black; color:#0f0; border:none; outline:none; }
+    </style>
+
+    <div id="log">CarrotOS Terminal\nhelp</div>
+    <input id="cmd" autofocus>
+
+    <script>
+      const log = document.getElementById("log");
+      const cmd = document.getElementById("cmd");
+
+      function write(t){ log.innerText += "\\n" + t; }
+
+      cmd.addEventListener("keydown", e=>{
+        if(e.key === "Enter"){
+
+          const c = cmd.value.toLowerCase().trim();
+          write("> " + c);
+
+          if(c === "help") write("enable / disable / status / clear");
+
+          else if(c === "status"){
+            write(localStorage.getItem("siteEnabled") === "true"
+              ? "🟢 ENABLED"
+              : "🔴 DISABLED");
+          }
+
+          else if(c === "disable"){
+            localStorage.setItem("siteEnabled","false");
+            write("DISABLED");
+          }
+
+          else if(c === "enable"){
+            localStorage.setItem("siteEnabled","true");
+            write("ENABLED");
+          }
+
+          else if(c === "clear"){
+            log.innerText = "CarrotOS Terminal";
+          }
+
+          cmd.value = "";
+        }
+      });
+    <\/script>
+  `);
+}
+
+/////////////////////////////////////////////////////
+// 🔐 PASSWORD SYSTEM (UPDATED RULES)
+/////////////////////////////////////////////////////
+function checkPassword() {
+
+  const input = document.getElementById("passwordInput").value.trim().toLowerCase();
+  const remember = document.getElementById("rememberPass").checked;
+
+  if (remember) {
+    localStorage.setItem("savedPassword", input);
+  } else {
+    localStorage.removeItem("savedPassword");
   }
 
-  document.getElementById("myBtn").onclick = function() {
-    // Open about:blank first
-    let newWindow = window.open('about:blank', '_blank');
+  document.getElementById("modal").style.display = "none";
 
-    // Then redirect it
-    newWindow.location.href = 'https://biologistice.github.io/tuff/';
+  // ALWAYS allow terminal
+  if (input === "carrotdev") {
+    openTerminal();
+    return;
+  }
 
-    // Change button color
-    this.style.backgroundColor = getRandomColor();
-  };
+  // Game hub
+  if (input === "kylerisrooegg") {
+    openGameHub();
+    return;
+  }
+
+  alert("Wrong password");
+}
+
+/////////////////////////////////////////////////////
+// 💾 RESTORE PASSWORD
+/////////////////////////////////////////////////////
+window.onload = function () {
+  const saved = localStorage.getItem("savedPassword");
+  if (saved) {
+    document.getElementById("passwordInput").value = saved;
+    document.getElementById("rememberPass").checked = true;
+  }
+};
+
 </script>
 
 </body>
