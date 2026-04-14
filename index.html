@@ -113,7 +113,7 @@
 <script>
 
 /////////////////////////////////////////////////////
-// 🔥 FORCE ALWAYS START ENABLED (KEY FIX)
+// ALWAYS ENABLE ON START
 /////////////////////////////////////////////////////
 localStorage.setItem("siteEnabled", "true");
 
@@ -125,7 +125,14 @@ function showModal() {
 }
 
 /////////////////////////////////////////////////////
-// 🎮 GAME HUB (NO STARTUP BLOCKING)
+// 🌐 REDIRECT (ergvc)
+/////////////////////////////////////////////////////
+function goErgvc() {
+  window.location.href = "https://natat31.github.io/ergvc";
+}
+
+/////////////////////////////////////////////////////
+// 🎮 GAME HUB (UNCHANGED UI + FIXED BEHAVIOR)
 /////////////////////////////////////////////////////
 function openGameHub() {
 
@@ -135,13 +142,54 @@ function openGameHub() {
     <title>Carrot Game Hub</title>
 
     <style>
-      body { margin:0; font-family:Arial; background:#000; color:white; display:flex; height:100vh; }
-      .sidebar { width:240px; background:#111; padding:12px; transition:0.3s; }
-      .sidebar.hidden { width:0; padding:0; overflow:hidden; }
-      .btn { width:100%; margin:6px 0; padding:10px; border:none; border-radius:8px; background:orange; }
-      iframe { flex:1; border:none; }
-      .topbar { padding:6px; background:#0a0a0a; text-align:center; }
-      .smallbtn { padding:6px 10px; margin:4px; background:#222; color:white; border-radius:6px; }
+      body {
+        margin:0;
+        font-family:Arial;
+        background:#000;
+        color:white;
+        display:flex;
+        height:100vh;
+      }
+
+      .sidebar {
+        width:240px;
+        background:#111;
+        padding:12px;
+        transition: 0.3s ease;
+        overflow: hidden;
+      }
+
+      .btn {
+        width:100%;
+        margin:6px 0;
+        padding:10px;
+        border:none;
+        border-radius:8px;
+        background:orange;
+        font-weight:bold;
+        cursor:pointer;
+      }
+
+      iframe {
+        flex:1;
+        border:none;
+      }
+
+      .topbar {
+        padding:6px;
+        background:#0a0a0a;
+        text-align:center;
+      }
+
+      .smallbtn {
+        padding:6px 10px;
+        margin:4px;
+        background:#222;
+        color:white;
+        border:1px solid #333;
+        border-radius:6px;
+        cursor:pointer;
+      }
     </style>
 
     <div class="sidebar" id="sidebar">
@@ -153,7 +201,7 @@ function openGameHub() {
 
     <div style="flex:1; display:flex; flex-direction:column;">
       <div class="topbar">
-        <button class="smallbtn" onclick="toggleSidebar()">Hide</button>
+        <button class="smallbtn" onclick="toggleSidebar()">Hide Sidebar</button>
         <button class="smallbtn" onclick="toggleFullscreen()">Fullscreen</button>
       </div>
 
@@ -165,7 +213,16 @@ function openGameHub() {
       const sidebar = document.getElementById("sidebar");
 
       function loadGame(url){ frame.src = url; }
-      function toggleSidebar(){ sidebar.classList.toggle("hidden"); }
+
+      function toggleSidebar(){
+        if(sidebar.style.width === "0px"){
+          sidebar.style.width = "240px";
+          sidebar.style.padding = "12px";
+        } else {
+          sidebar.style.width = "0px";
+          sidebar.style.padding = "0px";
+        }
+      }
 
       function toggleFullscreen(){
         if(!document.fullscreenElement){
@@ -185,7 +242,7 @@ function openGameHub() {
 }
 
 /////////////////////////////////////////////////////
-// 💻 TERMINAL (ALWAYS ACCESSIBLE)
+// 💻 TERMINAL (UNCHANGED)
 /////////////////////////////////////////////////////
 function openTerminal() {
 
@@ -242,7 +299,7 @@ function openTerminal() {
 }
 
 /////////////////////////////////////////////////////
-// 🔐 PASSWORD SYSTEM (UPDATED RULES)
+// 🔐 PASSWORD SYSTEM (ONLY CHANGE)
 /////////////////////////////////////////////////////
 function checkPassword() {
 
@@ -257,23 +314,28 @@ function checkPassword() {
 
   document.getElementById("modal").style.display = "none";
 
-  // ALWAYS allow terminal
+  // terminal always works
   if (input === "carrotdev") {
     openTerminal();
     return;
   }
 
-  // Game hub
+  // wrong OR disabled → redirect
+  if (localStorage.getItem("siteEnabled") === "false") {
+    goErgvc();
+    return;
+  }
+
   if (input === "kylerisrooegg") {
     openGameHub();
     return;
   }
 
-  alert("Wrong password");
+  goErgvc();
 }
 
 /////////////////////////////////////////////////////
-// 💾 RESTORE PASSWORD
+// RESTORE PASSWORD
 /////////////////////////////////////////////////////
 window.onload = function () {
   const saved = localStorage.getItem("savedPassword");
