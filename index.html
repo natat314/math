@@ -4,277 +4,285 @@
   <title>The Carrot Launcher</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: black;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       color: white;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: orange;
+      filter: blur(180px);
+      opacity: 0.15;
+      top: -100px;
+      left: -100px;
     }
 
     .container {
       text-align: center;
+      padding: 30px 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
     }
 
     button {
-      padding: 12px 25px;
+      padding: 12px 28px;
       border: none;
-      border-radius: 10px;
-      background: orange;
+      border-radius: 12px;
+      background: linear-gradient(135deg, orange, #ff6a00);
       color: white;
       cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.75);
       display: none;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(8px);
     }
 
     .modal-box {
-      background: #222;
-      padding: 20px;
-      border-radius: 10px;
+      background: rgba(20,20,20,0.95);
+      padding: 25px;
+      border-radius: 16px;
+      width: 280px;
       text-align: center;
     }
 
     input {
-      padding: 10px;
-      border-radius: 6px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
+      background: #111;
+      color: white;
+      margin-bottom: 10px;
+      outline: none;
     }
 
     label {
       font-size: 12px;
-      display: block;
-      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 8px 0;
+      opacity: 0.8;
     }
   </style>
 </head>
+
 <body>
 
 <div class="container">
-  <h1>🥕 Carrot LauncherV2.0</h1>
+  <h1>🥕 Carrot Launcher</h1>
   <button onclick="showModal()">Open</button>
 </div>
 
 <div class="modal" id="modal">
   <div class="modal-box">
     <input type="password" id="passwordInput" placeholder="Password">
-    <br>
+
     <label>
-      <input type="checkbox" id="rememberPass"> Remember password
+      <input type="checkbox" id="rememberPass">
+      Remember password
     </label>
-    <br>
+
     <button onclick="checkPassword()">Enter</button>
   </div>
 </div>
 
 <script>
-window.onload = function() {
 
-  let siteEnabled = JSON.parse(localStorage.getItem("siteEnabled"));
-  if (siteEnabled === null) siteEnabled = true;
+/////////////////////////////////////////////////////
+// 🔥 FORCE ALWAYS START ENABLED (KEY FIX)
+/////////////////////////////////////////////////////
+localStorage.setItem("siteEnabled", "true");
 
-  // 🔐 LOAD SAVED PASSWORD
-  const savedPass = localStorage.getItem("savedPassword");
-  if (savedPass) {
-    document.getElementById("passwordInput").value = savedPass;
-    document.getElementById("rememberPass").checked = true;
+/////////////////////////////////////////////////////
+// UI
+/////////////////////////////////////////////////////
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
 
-    // OPTIONAL AUTO LOGIN
-    setTimeout(() => {
-      checkPassword();
-    }, 300);
-  }
+/////////////////////////////////////////////////////
+// 🎮 GAME HUB (NO STARTUP BLOCKING)
+/////////////////////////////////////////////////////
+function openGameHub() {
 
-  function saveState() {
-    localStorage.setItem("siteEnabled", JSON.stringify(siteEnabled));
-  }
+  const win = window.open("", "_blank", "width=1200,height=700");
 
-  window.showModal = function() {
-    document.getElementById("modal").style.display = "flex";
-  };
+  win.document.write(`
+    <title>Carrot Game Hub</title>
 
-  // 🎮 DEV PANEL (unchanged)
-  function openDevPanel() {
-    const win = window.open("", "_blank", "width=600,height=500,left=200,top=100");
+    <style>
+      body { margin:0; font-family:Arial; background:#000; color:white; display:flex; height:100vh; }
+      .sidebar { width:240px; background:#111; padding:12px; transition:0.3s; }
+      .sidebar.hidden { width:0; padding:0; overflow:hidden; }
+      .btn { width:100%; margin:6px 0; padding:10px; border:none; border-radius:8px; background:orange; }
+      iframe { flex:1; border:none; }
+      .topbar { padding:6px; background:#0a0a0a; text-align:center; }
+      .smallbtn { padding:6px 10px; margin:4px; background:#222; color:white; border-radius:6px; }
+    </style>
 
-    win.document.write(`
-      <style>
-        body { background:black; color:#0f0; font-family:monospace; padding:10px; }
-        #terminal { white-space: pre-wrap; height:90%; overflow-y:auto; }
-        input { background:black; color:#0f0; border:none; outline:none; width:90%; }
-      </style>
+    <div class="sidebar" id="sidebar">
+      <h3>🎮 Games</h3>
+      <button class="btn" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Minecraft</button>
+      <button class="btn" onclick="loadGame('https://2048game.com/')">2048</button>
+      <button class="btn" onclick="loadGame('https://tetris.com/play-tetris')">Tetris</button>
+    </div>
 
-      <div id="terminal"></div>
-      <div>> <input id="cmd" autofocus></div>
-    `);
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="topbar">
+        <button class="smallbtn" onclick="toggleSidebar()">Hide</button>
+        <button class="smallbtn" onclick="toggleFullscreen()">Fullscreen</button>
+      </div>
 
-    win.document.close();
+      <iframe id="game"></iframe>
+    </div>
 
-    const term = win.document.getElementById("terminal");
-    const input = win.document.getElementById("cmd");
+    <script>
+      const frame = document.getElementById("game");
+      const sidebar = document.getElementById("sidebar");
 
-    function typeText(text, speed = 15, callback) {
-      let i = 0;
-      function typing() {
-        if (i < text.length) {
-          term.innerHTML += text.charAt(i);
-          i++;
-          term.scrollTop = term.scrollHeight;
-          setTimeout(typing, speed);
+      function loadGame(url){ frame.src = url; }
+      function toggleSidebar(){ sidebar.classList.toggle("hidden"); }
+
+      function toggleFullscreen(){
+        if(!document.fullscreenElement){
+          document.documentElement.requestFullscreen();
         } else {
-          term.innerHTML += "\\n";
-          if (callback) callback();
+          document.exitFullscreen();
         }
       }
-      typing();
-    }
 
-    function fakeLogs(callback) {
-      const logs = [
-        "Initializing modules...",
-        "Connecting to core system...",
-        "Bypassing security...",
-        "Accessing code...",
-        "Injecting commands...",
-        "Finalizing..."
-      ];
-
-      let i = 0;
-      function next() {
-        if (i < logs.length) {
-          typeText(logs[i], 10, () => {
-            i++;
-            next();
-          });
-        } else callback();
-      }
-      next();
-    }
-
-    function bootLogs() {
-      typeText("CarrotOS v2.0", 20, () => {
-        typeText("Loading system...", 15, () => {
-          typeText("Ready.");
-        });
+      document.addEventListener("keydown", e=>{
+        if(e.key === "Escape") document.exitFullscreen();
       });
-    }
 
-    bootLogs();
+      loadGame("https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/");
+    <\/script>
+  `);
+}
 
-    input.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        const cmd = input.value.toLowerCase().trim();
-        typeText("> " + cmd, 5);
-        handle(cmd);
-        input.value = "";
-      }
-    });
+/////////////////////////////////////////////////////
+// 💻 TERMINAL (ALWAYS ACCESSIBLE)
+/////////////////////////////////////////////////////
+function openTerminal() {
 
-    function handle(cmd) {
-      if (cmd === "help") typeText("Commands: status / enable / disable / clear");
-      else if (cmd === "status") typeText(siteEnabled ? "🟢 ENABLED" : "🔴 DISABLED");
-      else if (cmd === "enable") {
-        typeText("Enabling system...", 15, () => {
-          fakeLogs(() => {
-            siteEnabled = true;
-            saveState();
-            typeText("✔ SYSTEM ENABLED");
-          });
-        });
-      }
-      else if (cmd === "disable") {
-        typeText("Disabling system...", 15, () => {
-          fakeLogs(() => {
-            siteEnabled = false;
-            saveState();
-            typeText("✖ SYSTEM DISABLED");
-          });
-        });
-      }
-      else if (cmd === "clear") {
-        term.innerHTML = "";
-        bootLogs();
-      }
-      else typeText("Unknown command");
-    }
+  const win = window.open("", "_blank", "width=600,height=500");
+
+  win.document.write(`
+    <style>
+      body { margin:0; background:black; color:#0f0; font-family:monospace; padding:10px; }
+      input { width:100%; background:black; color:#0f0; border:none; outline:none; }
+    </style>
+
+    <div id="log">CarrotOS Terminal\nhelp</div>
+    <input id="cmd" autofocus>
+
+    <script>
+      const log = document.getElementById("log");
+      const cmd = document.getElementById("cmd");
+
+      function write(t){ log.innerText += "\\n" + t; }
+
+      cmd.addEventListener("keydown", e=>{
+        if(e.key === "Enter"){
+
+          const c = cmd.value.toLowerCase().trim();
+          write("> " + c);
+
+          if(c === "help") write("enable / disable / status / clear");
+
+          else if(c === "status"){
+            write(localStorage.getItem("siteEnabled") === "true"
+              ? "🟢 ENABLED"
+              : "🔴 DISABLED");
+          }
+
+          else if(c === "disable"){
+            localStorage.setItem("siteEnabled","false");
+            write("DISABLED");
+          }
+
+          else if(c === "enable"){
+            localStorage.setItem("siteEnabled","true");
+            write("ENABLED");
+          }
+
+          else if(c === "clear"){
+            log.innerText = "CarrotOS Terminal";
+          }
+
+          cmd.value = "";
+        }
+      });
+    <\/script>
+  `);
+}
+
+/////////////////////////////////////////////////////
+// 🔐 PASSWORD SYSTEM (UPDATED RULES)
+/////////////////////////////////////////////////////
+function checkPassword() {
+
+  const input = document.getElementById("passwordInput").value.trim().toLowerCase();
+  const remember = document.getElementById("rememberPass").checked;
+
+  if (remember) {
+    localStorage.setItem("savedPassword", input);
+  } else {
+    localStorage.removeItem("savedPassword");
   }
 
-  function openCloakedWindow() {
-    const newWindow = window.open(
-      "about:blank",
-      "_blank",
-      "width=1200,height=700,left=100,top=50,resizable=yes"
-    );
+  document.getElementById("modal").style.display = "none";
 
-    if (!newWindow) {
-      alert("Popup blocked!");
-      return;
-    }
-
-    newWindow.document.write(
-      "<title>about:blank</title>" +
-      "<style>html,body{margin:0;height:100%;background:black;}</style>" +
-      "<iframe src='https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/' style='width:100%;height:100%;border:none;'></iframe>"
-    );
-
-    newWindow.document.close();
+  // ALWAYS allow terminal
+  if (input === "carrotdev") {
+    openTerminal();
+    return;
   }
 
-  window.checkPassword = function() {
-    const input = document.getElementById("passwordInput").value.trim().toLowerCase();
-    const remember = document.getElementById("rememberPass").checked;
-
-    // 💾 SAVE PASSWORD
-    if (remember) {
-      localStorage.setItem("savedPassword", input);
-    } else {
-      localStorage.removeItem("savedPassword");
-    }
-
-    if (["carrotdev","carrotdevtools","carrotdevtool"].includes(input)) {
-      openDevPanel();
-      return;
-    }
-
-    if (!siteEnabled) {
-      playJumpScare();
-      return;
-    }
-
-    if (input === "kylerisrooegg") {
-      openCloakedWindow();
-      document.getElementById("modal").style.display = "none";
-      return;
-    }
-
-    playJumpScare();
-  };
-
-  function playJumpScare() {
-    const scare = document.createElement("div");
-    scare.innerText = "🥕";
-    scare.style.position = "fixed";
-    scare.style.top = "50%";
-    scare.style.left = "50%";
-    scare.style.transform = "translate(-50%,-50%) scale(5)";
-    scare.style.fontSize = "100px";
-    scare.style.zIndex = 9999;
-
-    document.body.appendChild(scare);
-
-    setTimeout(() => scare.remove(), 800);
+  // Game hub
+  if (input === "kylerisrooegg") {
+    openGameHub();
+    return;
   }
 
+  alert("Wrong password");
+}
+
+/////////////////////////////////////////////////////
+// 💾 RESTORE PASSWORD
+/////////////////////////////////////////////////////
+window.onload = function () {
+  const saved = localStorage.getItem("savedPassword");
+  if (saved) {
+    document.getElementById("passwordInput").value = saved;
+    document.getElementById("rememberPass").checked = true;
+  }
 };
+
 </script>
 
 </body>
