@@ -3,6 +3,8 @@
 <head>
   <title>The Carrot Launcher</title>
 
+  <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
 
@@ -15,7 +17,21 @@
       font-family: Arial, sans-serif;
       color: white;
       overflow: hidden;
-      background: radial-gradient(circle at top, #1a1a1a, #000);
+
+      background: url("https://i.postimg.cc/zG5b04QZ/High-five-of-both-avatars.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      filter: brightness(1.25) contrast(1.1);
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      pointer-events: none;
     }
 
     body::before {
@@ -25,7 +41,7 @@
       height: 500px;
       background: orange;
       filter: blur(180px);
-      opacity: 0.15;
+      opacity: 0.2;
       top: -100px;
       left: -100px;
     }
@@ -33,10 +49,10 @@
     .container {
       text-align: center;
       padding: 30px 40px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 20px;
-      backdrop-filter: blur(12px);
+      position: relative;
     }
 
     button {
@@ -87,85 +103,141 @@
       margin: 8px 0;
       opacity: 0.8;
     }
+
+    .splash {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffeb3b;
+      text-shadow: 2px 2px 0 #000;
+      pointer-events: none;
+      font-family: "Minecraftia", monospace;
+      animation: splashBounce 1.2s infinite ease-in-out;
+    }
+
+    @keyframes splashBounce {
+      0% { transform: rotate(-10deg) scale(1); }
+      50% { transform: rotate(-6deg) scale(1.15); }
+      100% { transform: rotate(-10deg) scale(1); }
+    }
   </style>
 </head>
 
 <body>
-
-<div class="container">
-  <h1>🥕 Carrot Launcher</h1>
-  <button onclick="showModal()">Open</button>
-</div>
-
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <input type="password" id="passwordInput" placeholder="Password">
-
-    <label>
-      <input type="checkbox" id="rememberPass">
-      Remember password
-    </label>
-
-    <button onclick="checkPassword()">Enter</button>
+  <div class="container">
+    <div class="splash" id="splashText">Loading...</div>
+    <h1>🥕 Carrot Launcher</h1>
+    <button onclick="showModal()">Open</button>
   </div>
-</div>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <input type="password" id="passwordInput" placeholder="Password">
+      <label>
+        <input type="checkbox" id="rememberPass"> Remember password
+      </label>
+      <button onclick="checkPassword()">Enter</button>
+    </div>
+  </div>
 
 <script>
-
-/////////////////////////////////////////////////////
-// 🔥 FORCE ALWAYS START ENABLED (KEY FIX)
-/////////////////////////////////////////////////////
 localStorage.setItem("siteEnabled", "true");
 
-/////////////////////////////////////////////////////
-// UI
-/////////////////////////////////////////////////////
 function showModal() {
   document.getElementById("modal").style.display = "flex";
 }
 
-/////////////////////////////////////////////////////
-// 🎮 GAME HUB (NO STARTUP BLOCKING)
-/////////////////////////////////////////////////////
-function openGameHub() {
+function goErgvc() {
+  window.location.href = "https://natat31.github.io/ergvc";
+}
 
+/* ================= GAME HUB ================= */
+function openGameHub() {
   const win = window.open("", "_blank", "width=1200,height=700");
 
   win.document.write(`
     <title>Carrot Game Hub</title>
-
     <style>
       body { margin:0; font-family:Arial; background:#000; color:white; display:flex; height:100vh; }
-      .sidebar { width:240px; background:#111; padding:12px; transition:0.3s; }
-      .sidebar.hidden { width:0; padding:0; overflow:hidden; }
-      .btn { width:100%; margin:6px 0; padding:10px; border:none; border-radius:8px; background:orange; }
+
+      .sidebar {
+        width:240px;
+        background:#111;
+        padding:12px;
+        overflow-y:auto;
+      }
+
+      .btn {
+        width:100%;
+        margin:6px 0;
+        padding:10px;
+        border:none;
+        border-radius:8px;
+        background:orange;
+        cursor:pointer;
+      }
+
+      .dragging { opacity:0.5; }
+
       iframe { flex:1; border:none; }
-      .topbar { padding:6px; background:#0a0a0a; text-align:center; }
-      .smallbtn { padding:6px 10px; margin:4px; background:#222; color:white; border-radius:6px; }
+
+      .topbar {
+        padding:6px;
+        background:#0a0a0a;
+        display:flex;
+        justify-content:center;
+        gap:8px;
+      }
+
+      .smallbtn {
+        padding:6px 10px;
+        background:#222;
+        color:white;
+        border:1px solid #333;
+        border-radius:6px;
+        cursor:pointer;
+      }
     </style>
 
     <div class="sidebar" id="sidebar">
       <h3>🎮 Games</h3>
-      <button class="btn" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Minecraft</button>
-      <button class="btn" onclick="loadGame('https://2048game.com/')">2048</button>
-      <button class="btn" onclick="loadGame('https://tetris.com/play-tetris')">Tetris</button>
+
+      <button class="btn" draggable="true" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Tuff</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://pixelclient.xyz/')">Pixel</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://astraclientorg.github.io/')">Astra</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonX_V4.html')">DragonXV2</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonXV5.html')">DragonXV5</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/N0VA_CLIENT.html')">N0VA Client</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://veck.io/')">Veck</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://7890-8654.github.io/Minecraft_Java_edition1.9.4/')">Minecraft 1.9.4</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://duxisblog.neocities.org/EaglercraftX_1.8_u27_Offline_Signed')">EaglercraftX</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://randomorca25.github.io/relinker4geo/')">Redirecter</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://neal.fun/')">neal.fun</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://www.roblox.com/')">Roblox</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://ozgames.io/')">Oz Games</button>
+      <button class="btn" draggable="true" onclick="loadGame('http://slither.com/io')">Slither.io</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://onecompiler.com/html')">Code Tester</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://2048game.com/')">2048</button>
     </div>
 
     <div style="flex:1; display:flex; flex-direction:column;">
       <div class="topbar">
-        <button class="smallbtn" onclick="toggleSidebar()">Hide</button>
+        <button class="smallbtn" onclick="toggleSidebar()" id="hideBtn">Hide Games</button>
         <button class="smallbtn" onclick="toggleFullscreen()">Fullscreen</button>
       </div>
-
       <iframe id="game"></iframe>
     </div>
 
     <script>
       const frame = document.getElementById("game");
       const sidebar = document.getElementById("sidebar");
+      const hideBtn = document.getElementById("hideBtn");
+
+      let hidden = false;
 
       function loadGame(url){ frame.src = url; }
-      function toggleSidebar(){ sidebar.classList.toggle("hidden"); }
 
       function toggleFullscreen(){
         if(!document.fullscreenElement){
@@ -175,8 +247,38 @@ function openGameHub() {
         }
       }
 
-      document.addEventListener("keydown", e=>{
-        if(e.key === "Escape") document.exitFullscreen();
+      function toggleSidebar(){
+        hidden = !hidden;
+
+        if(hidden){
+          sidebar.style.display = "none";
+          hideBtn.textContent = "Show Games";
+        } else {
+          sidebar.style.display = "block";
+          hideBtn.textContent = "Hide Games";
+        }
+      }
+
+      const buttons = document.querySelectorAll(".btn");
+      let dragItem = null;
+
+      buttons.forEach(btn => {
+        btn.addEventListener("dragstart", () => {
+          dragItem = btn;
+          btn.classList.add("dragging");
+        });
+
+        btn.addEventListener("dragend", () => {
+          dragItem = null;
+          btn.classList.remove("dragging");
+        });
+
+        btn.addEventListener("dragover", e => {
+          e.preventDefault();
+          if(btn !== dragItem){
+            sidebar.insertBefore(dragItem, btn);
+          }
+        });
       });
 
       loadGame("https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/");
@@ -184,11 +286,8 @@ function openGameHub() {
   `);
 }
 
-/////////////////////////////////////////////////////
-// 💻 TERMINAL (ALWAYS ACCESSIBLE)
-/////////////////////////////////////////////////////
+/* ================= TERMINAL ================= */
 function openTerminal() {
-
   const win = window.open("", "_blank", "width=600,height=500");
 
   win.document.write(`
@@ -208,31 +307,14 @@ function openTerminal() {
 
       cmd.addEventListener("keydown", e=>{
         if(e.key === "Enter"){
-
           const c = cmd.value.toLowerCase().trim();
           write("> " + c);
 
           if(c === "help") write("enable / disable / status / clear");
-
-          else if(c === "status"){
-            write(localStorage.getItem("siteEnabled") === "true"
-              ? "🟢 ENABLED"
-              : "🔴 DISABLED");
-          }
-
-          else if(c === "disable"){
-            localStorage.setItem("siteEnabled","false");
-            write("DISABLED");
-          }
-
-          else if(c === "enable"){
-            localStorage.setItem("siteEnabled","true");
-            write("ENABLED");
-          }
-
-          else if(c === "clear"){
-            log.innerText = "CarrotOS Terminal";
-          }
+          else if(c === "status") write(localStorage.getItem("siteEnabled") === "true" ? "🟢 ENABLED" : "🔴 DISABLED");
+          else if(c === "disable"){ localStorage.setItem("siteEnabled","false"); write("DISABLED"); }
+          else if(c === "enable"){ localStorage.setItem("siteEnabled","true"); write("ENABLED"); }
+          else if(c === "clear") log.innerText = "CarrotOS Terminal";
 
           cmd.value = "";
         }
@@ -241,48 +323,42 @@ function openTerminal() {
   `);
 }
 
-/////////////////////////////////////////////////////
-// 🔐 PASSWORD SYSTEM (UPDATED RULES)
-/////////////////////////////////////////////////////
+/* ================= PASSWORD ================= */
 function checkPassword() {
-
   const input = document.getElementById("passwordInput").value.trim().toLowerCase();
   const remember = document.getElementById("rememberPass").checked;
 
-  if (remember) {
-    localStorage.setItem("savedPassword", input);
-  } else {
-    localStorage.removeItem("savedPassword");
-  }
+  if (remember) localStorage.setItem("savedPassword", input);
+  else localStorage.removeItem("savedPassword");
 
   document.getElementById("modal").style.display = "none";
 
-  // ALWAYS allow terminal
-  if (input === "carrotdev") {
-    openTerminal();
-    return;
-  }
+  if (input === "carrotdev") return openTerminal();
+  if (localStorage.getItem("siteEnabled") === "false") return goErgvc();
+  if (input === "goawaykyler") return openGameHub();
 
-  // Game hub
-  if (input === "kylerisrooegg") {
-    openGameHub();
-    return;
-  }
-
-  alert("Wrong password");
+  goErgvc();
 }
 
-/////////////////////////////////////////////////////
-// 💾 RESTORE PASSWORD
-/////////////////////////////////////////////////////
+/* ================= SPLASH ================= */
 window.onload = function () {
   const saved = localStorage.getItem("savedPassword");
   if (saved) {
     document.getElementById("passwordInput").value = saved;
     document.getElementById("rememberPass").checked = true;
   }
-};
 
+  const splashTexts = [
+    "Carrot Power!",
+    "Made with HTML magic",
+    "Now with 20% more chaos",
+    "minecraft but carrots",
+    "Loading braincells..."
+  ];
+
+  document.getElementById("splashText").textContent =
+    splashTexts[Math.floor(Math.random() * splashTexts.length)];
+};
 </script>
 
 </body>
