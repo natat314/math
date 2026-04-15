@@ -345,21 +345,25 @@ window.onload = function () {
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
 
-let mouse = { x: 0, y: 0 };
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
 window.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-const dots = Array.from({ length: 60 }, () => ({
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  vx: (Math.random() - 0.5) * 1.5,
-  vy: (Math.random() - 0.5) * 1.5
+const dots = Array.from({ length: 120 }, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  vx: (Math.random() - 0.5) * 1.6,
+  vy: (Math.random() - 0.5) * 1.6
 }));
 
 function animate() {
@@ -367,7 +371,7 @@ function animate() {
 
   ctx.fillStyle = "orange";
   ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
+  ctx.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
   ctx.fill();
 
   for (let i = 0; i < dots.length; i++) {
@@ -380,12 +384,12 @@ function animate() {
     if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
     let d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-    if (d < 150) {
-      ctx.strokeStyle = "rgba(255,165,0,0.4)";
+    if (d < 220) {
+      ctx.strokeStyle = "rgba(255,165,0,0.35)";
       ctx.beginPath();
       ctx.moveTo(p.x, p.y);
       ctx.lineTo(mouse.x, mouse.y);
@@ -401,4 +405,3 @@ animate();
 </script>
 
 </body>
-</html>
