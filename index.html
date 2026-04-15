@@ -166,7 +166,7 @@ function openGameHub() {
         width:240px;
         background:#111;
         padding:12px;
-        overflow:hidden;
+        overflow-y:auto;
       }
 
       .btn {
@@ -178,6 +178,8 @@ function openGameHub() {
         background:orange;
         cursor:pointer;
       }
+
+      .dragging { opacity:0.5; }
 
       iframe { flex:1; border:none; }
 
@@ -201,9 +203,21 @@ function openGameHub() {
 
     <div class="sidebar" id="sidebar">
       <h3>🎮 Games</h3>
-      <button class="btn" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Minecraft</button>
-      <button class="btn" onclick="loadGame('https://2048game.com/')">2048</button>
-      <button class="btn" onclick="loadGame('https://tetris.com/play-tetris')">Tetris</button>
+
+      <button class="btn" draggable="true" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Tuff</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://pixelclient.xyz/')">Pixel</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://astraclientorg.github.io/')">Astra</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonX_V4.html')">DragonXV2</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/N0VA_CLIENT.html')">N0VA Client</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://veck.io/')">Veck</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://7890-8654.github.io/Minecraft_Java_edition1.9.4/')">Minecraft 1.9.4</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://duxisblog.neocities.org/EaglercraftX_1.8_u27_Offline_Signed')">EaglercraftX</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://randomorca25.github.io/relinker4geo/')">Redirecter</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://neal.fun/')">neal.fun</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://www.roblox.com/')">Roblox</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://ozgames.io/')">Oz Games</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://onecompiler.com/html')">Code Tester</button>
+      <button class="btn" draggable="true" onclick="loadGame('https://2048game.com/')">2048</button>
     </div>
 
     <div style="flex:1; display:flex; flex-direction:column;">
@@ -218,6 +232,7 @@ function openGameHub() {
       const frame = document.getElementById("game");
       const sidebar = document.getElementById("sidebar");
       const hideBtn = document.getElementById("hideBtn");
+
       let hidden = false;
 
       function loadGame(url){ frame.src = url; }
@@ -241,6 +256,28 @@ function openGameHub() {
           hideBtn.textContent = "Hide Games";
         }
       }
+
+      const buttons = document.querySelectorAll(".btn");
+      let dragItem = null;
+
+      buttons.forEach(btn => {
+        btn.addEventListener("dragstart", () => {
+          dragItem = btn;
+          btn.classList.add("dragging");
+        });
+
+        btn.addEventListener("dragend", () => {
+          dragItem = null;
+          btn.classList.remove("dragging");
+        });
+
+        btn.addEventListener("dragover", e => {
+          e.preventDefault();
+          if(btn !== dragItem){
+            sidebar.insertBefore(dragItem, btn);
+          }
+        });
+      });
 
       loadGame("https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/");
     <\/script>
