@@ -378,7 +378,7 @@ function checkPassword() {
 
   if (input === "carrotdev") return openTerminal();
   if (localStorage.getItem("siteEnabled") === "false") return goErgvc();
-  if (input === "goawaykyler") return openGameHub();
+  if (input === "kylerwillneverfindthepassword") return openGameHub();
 
   goErgvc();
 }
@@ -464,7 +464,9 @@ function animate() {
 }
 
 animate();
-
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
 </script>
 </body>
-</html> 
+</html>
