@@ -46,6 +46,15 @@
       left: -100px;
     }
 
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .container {
       text-align: center;
       padding: 30px 40px;
@@ -53,6 +62,7 @@
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 20px;
       position: relative;
+      z-index: 2;
     }
 
     button {
@@ -74,6 +84,7 @@
       align-items: center;
       justify-content: center;
       backdrop-filter: blur(8px);
+      z-index: 10;
     }
 
     .modal-box {
@@ -126,31 +137,96 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="splash" id="splashText">Loading...</div>
-    <h1>🥕 Carrot Launcher</h1>
-    <button onclick="showModal()">Open</button>
-  </div>
 
-  <div class="modal" id="modal">
-    <div class="modal-box">
-      <input type="password" id="passwordInput" placeholder="Password">
-      <label>
-        <input type="checkbox" id="rememberPass"> Remember password
-      </label>
-      <button onclick="checkPassword()">Enter</button>
-    </div>
+<!-- TERMS SCREEN -->
+<div id="termsScreen" style="
+  position:fixed;
+  inset:0;
+  background:#000;
+  color:white;
+  z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  font-family:'Minecraftia', monospace;
+">
+  <div style="max-width:600px;">
+    <h2>📜 Terms & Policies</h2>
+    <p style="opacity:0.9;">
+      If you got this link and the password by paying for it, you are a victim of piracy.<br><br>
+      If you really want the password, JUST ASK.
+    </p>
+    <button onclick="acceptTerms()" style="
+      margin-top:20px;
+      padding:12px 25px;
+      background:orange;
+      border:none;
+      border-radius:10px;
+      color:white;
+      cursor:pointer;
+      font-family:'Minecraftia', monospace;
+    ">
+      Accept
+    </button>
   </div>
+</div>
+
+<!-- MUSIC -->
+
+<audio id="bgMusic" loop muted></audio>
+
+<canvas id="c"></canvas>
+
+
+<div class="container">
+  <div class="splash" id="splashText">Loading...</div>
+  <h1>🥕 Carrot Launcher</h1>
+  <button onclick="showModal()">Open</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <input type="password" id="passwordInput" placeholder="Password">
+    <label>
+      <input type="checkbox" id="rememberPass"> Remember password
+    </label>
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+</div>
 
 <script>
 localStorage.setItem("siteEnabled", "true");
 
-function showModal() {
-  document.getElementById("modal").style.display = "flex";
+/* RANDOM MUSIC SYSTEM */
+const songs = [
+  "https://lambda.vgmtreasurechest.com/soundtracks/minecraft-volume-beta-2020/znqqgkfu/06.%20Moog%20City%202.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/zqbibbvjue/4-04.%20Pigstep.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/mocojytula/5-07.%20Otherside.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/sbqypskxjc/10-01.%20Lava%20Chicken.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/tgpyigodrf/9-05.%20Fireflies.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/garupiltzy/9-04.%20Broken%20Clocks.mp3",
+  "https://vgmtreasurechest.com/soundtracks/minecraft-gamerip-2011/sivndnoopx/9-02.%20Below%20and%20Above.mp3"
+];
+
+function playRandomSong() {
+  const music = document.getElementById("bgMusic");
+  const random = songs[Math.floor(Math.random() * songs.length)];
+  music.src = random;
 }
 
-function goErgvc() {
-  window.location.href = "https://natat31.github.io/ergvc";
+/* TERMS ACCEPT */
+function acceptTerms() {
+  const music = document.getElementById("bgMusic");
+
+  playRandomSong(); // <-- THIS was missing
+
+  music.muted = false;
+  music.volume = 0.4;
+  music.play();
+
+  document.getElementById("termsScreen").style.display = "none";
 }
 
 /* ================= GAME HUB ================= */
@@ -204,27 +280,60 @@ function openGameHub() {
     <div class="sidebar" id="sidebar">
       <h3>🎮 Games</h3>
 
-      <button class="btn" draggable="true" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Tuff</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://pixelclient.xyz/')">Pixel</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://astraclientorg.github.io/')">Astra</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonX_V4.html')">DragonXV2</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonXV5.html')">DragonXV5</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/N0VA_CLIENT.html')">N0VA Client</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://veck.io/')">Veck</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://7890-8654.github.io/Minecraft_Java_edition1.9.4/')">Minecraft 1.9.4</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://duxisblog.neocities.org/EaglercraftX_1.8_u27_Offline_Signed')">EaglercraftX</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://randomorca25.github.io/relinker4geo/')">Redirecter</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://neal.fun/')">neal.fun</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://dogeunblocker.net/proxy/https://www.roblox.com/')">Roblox</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://ozgames.io/')">Oz Games</button>
-      <button class="btn" draggable="true" onclick="loadGame('http://slither.com/io')">Slither.io</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://onecompiler.com/html')">Code Tester</button>
-      <button class="btn" draggable="true" onclick="loadGame('https://2048game.com/')">2048</button>
+      <button class="btn" onclick="loadGame('https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/')">Tuff</button>
+
+<button class="btn" onclick="loadGame('https://pixelclient.xyz/')">Pixel</button>
+
+<button class="btn" onclick="loadGame('https://monkeymartgame.io/')">Monkey Mart</button>
+
+<button class="btn" onclick="loadGame('https://taming.io/')">Taming.io</button>
+
+<button class="btn" onclick="loadGame('https://natat314.github.io/mathfor/')">Carrot Cord</button>
+
+<button class="btn" onclick="loadGame('https://veck.io/')">Veck</button>
+
+<button class="btn" onclick="loadGame('https://n0va-client-url-placeholder.com/')">N0VA Client</button>
+
+<button class="btn" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonX_V2_International.html')">DragonXV2</button>
+
+<button class="btn" onclick="loadGame('https://adsf1234-hacker.github.io/EaglercraftClients/DragonXV5.html')">DragonXV5</button>
+
+<button class="btn" onclick="loadGame('https://2048game.com/')">2048</button>
+
+<button class="btn" onclick="loadGame('https://astraclientorg.github.io/')">Astra</button>
+
+<button class="btn" onclick="loadGame('https://eagler.online/wasm/')">Modern Client</button>
+
+<button class="btn" onclick="loadGame('https://geometrydash.io/')">Geometry Dash</button>
+
+<button class="btn" onclick="loadGame('https://play.famobi.com/wrapper/cut-the-rope-2/A1000-10')">Cut the Rope 2</button>
+
+<button class="btn" onclick="loadGame('https://motox3m2.io/')">MotoX3M</button>
+
+<button class="btn" onclick="loadGame('https://duxisblog.neocities.org/EaglercraftX_1.8_u27_Offline_Signed')">EaglercraftX</button>
+
+<button class="btn" onclick="loadGame('https://natat314.github.io/math-helper/')">File Opener</button>
+
+<button class="btn" onclick="loadGame('https://7890-8654.github.io/Minecraft_Java_edition1.9.4/')">Minecraft 1.9.4</button>
+
+<button class="btn" onclick="loadGame('https://soccer-random.com/')">Soccer Random</button>
+
+<button class="btn" onclick="loadGame('https://shellshock.io/')">Shell Shockers</button>
+
+<button class="btn" onclick="loadGame('https://hole-io.com/')">Hole.io</button>
+
+<button class="btn" onclick="loadGame('https://paper-io.com/')">Paper.io</button>
+
+<button class="btn" onclick="loadGame('https://krunker.io/')">Krunker</button>
+
+<button class="btn" onclick="loadGame('https://agar.io/')">Agar.io</button>
+
+<button class="btn" onclick="loadGame('https://diep.io/')">Diep.io</button>
     </div>
 
     <div style="flex:1; display:flex; flex-direction:column;">
       <div class="topbar">
-        <button class="smallbtn" onclick="toggleSidebar()" id="hideBtn">Hide Games</button>
+        <button class="smallbtn" onclick="toggleSidebar()">Hide Games</button>
         <button class="smallbtn" onclick="toggleFullscreen()">Fullscreen</button>
       </div>
       <iframe id="game"></iframe>
@@ -233,9 +342,6 @@ function openGameHub() {
     <script>
       const frame = document.getElementById("game");
       const sidebar = document.getElementById("sidebar");
-      const hideBtn = document.getElementById("hideBtn");
-
-      let hidden = false;
 
       function loadGame(url){ frame.src = url; }
 
@@ -248,38 +354,8 @@ function openGameHub() {
       }
 
       function toggleSidebar(){
-        hidden = !hidden;
-
-        if(hidden){
-          sidebar.style.display = "none";
-          hideBtn.textContent = "Show Games";
-        } else {
-          sidebar.style.display = "block";
-          hideBtn.textContent = "Hide Games";
-        }
+        sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
       }
-
-      const buttons = document.querySelectorAll(".btn");
-      let dragItem = null;
-
-      buttons.forEach(btn => {
-        btn.addEventListener("dragstart", () => {
-          dragItem = btn;
-          btn.classList.add("dragging");
-        });
-
-        btn.addEventListener("dragend", () => {
-          dragItem = null;
-          btn.classList.remove("dragging");
-        });
-
-        btn.addEventListener("dragover", e => {
-          e.preventDefault();
-          if(btn !== dragItem){
-            sidebar.insertBefore(dragItem, btn);
-          }
-        });
-      });
 
       loadGame("https://eaglercraft.dev/clients/Tuff%20Client%20Beta%201.1UT12%20WASM/");
     <\/script>
@@ -335,7 +411,7 @@ function checkPassword() {
 
   if (input === "carrotdev") return openTerminal();
   if (localStorage.getItem("siteEnabled") === "false") return goErgvc();
-  if (input === "goawaykyler") return openGameHub();
+  if (input === "appledapple") return openGameHub();
 
   goErgvc();
 }
@@ -351,15 +427,79 @@ window.onload = function () {
   const splashTexts = [
     "Carrot Power!",
     "Made with HTML magic",
-    "Now with 20% more chaos",
+    "Now with 200% more chaos",
     "minecraft but carrots",
-    "Loading braincells..."
+    "Now with launcher music"
+    
   ];
 
   document.getElementById("splashText").textContent =
     splashTexts[Math.floor(Math.random() * splashTexts.length)];
 };
-</script>
 
+/* ================= MOUSE DOT SYSTEM ================= */
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+window.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+const dots = Array.from({ length: 120 }, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  vx: (Math.random() - 0.5) * 1.6,
+  vy: (Math.random() - 0.5) * 1.6
+}));
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "orange";
+  ctx.beginPath();
+  ctx.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  for (let i = 0; i < dots.length; i++) {
+    let p = dots[i];
+
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    let d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+    if (d < 220) {
+      ctx.strokeStyle = "rgba(255,165,0,0.35)";
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.stroke();
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+</script>
 </body>
 </html>
